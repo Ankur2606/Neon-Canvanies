@@ -43,9 +43,9 @@ export const AIPanel: FC<AIPanelProps> = ({
   };
 
   return (
-    <aside className="w-full h-full bg-card/50 backdrop-blur-sm flex-col p-4 z-10 gap-4 md:flex md:w-96 md:border-l md:border-primary/20">
+    <aside className="w-full h-full bg-card/50 backdrop-blur-sm flex-col z-10 gap-4 md:flex md:w-96 md:border-l md:border-primary/20 md:p-4">
       <ScrollArea className="flex-1">
-        <div className="space-y-6 pr-2">
+        <div className="space-y-6 p-4 md:p-0 md:pr-2">
           <h2 className="text-xl font-bold text-glow-accent text-center hidden md:block">AI Generation</h2>
 
           <div className="space-y-4">
@@ -54,7 +54,7 @@ export const AIPanel: FC<AIPanelProps> = ({
             </Label>
             
             <Select value={animeStyle} onValueChange={(v: AnimeStyle) => setAnimeStyle(v)}>
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="w-full neon-glow">
                     <SelectValue placeholder="Select a style" />
                 </SelectTrigger>
                 <SelectContent>
