@@ -1,7 +1,8 @@
 
 'use client';
 
-import type { Dispatch, FC, SetStateAction, ReactNode, useState } from 'react';
+import type { Dispatch, FC, SetStateAction, ReactNode } from 'react';
+import { useState } from 'react';
 import { Sidebar, SidebarInset } from '@/components/ui/sidebar';
 import { Toolbar } from '@/components/toolbar';
 import { AIPanel } from '@/components/ai-panel';
@@ -10,7 +11,7 @@ import type { Tool, AnimeStyle } from '@/app/page';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Button } from './ui/button';
-import { Sparkles, X } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 
 interface AppLayoutProps {
   children: ReactNode;
