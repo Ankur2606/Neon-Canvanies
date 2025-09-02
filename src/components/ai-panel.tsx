@@ -3,18 +3,13 @@
 
 import { Dispatch, FC, SetStateAction } from 'react';
 import Image from 'next/image';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Sparkles, Loader2, Download } from 'lucide-react';
 import type { AnimeStyle } from '@/app/page';
 import { ScrollArea } from './ui/scroll-area';
+import { RadioGroup, RadioGroupItem } from './ui/radio-group';
+import { cn } from '@/lib/utils';
 
 interface AIPanelProps {
   animeStyle: AnimeStyle;
@@ -23,6 +18,13 @@ interface AIPanelProps {
   onGenerate: () => void;
   generatedImage: string | null;
 }
+
+const styleOptions: { value: AnimeStyle; label: string; image: string, hint: string }[] = [
+    { value: 'cyberpunk', label: 'Cyberpunk', image: 'https://picsum.photos/200/200', hint: 'cyberpunk city' },
+    { value: 'classic', label: 'Classic', image: 'https://picsum.photos/200/201', hint: 'classic anime' },
+    { value: 'fantasy', label: 'Fantasy', image: 'https://picsum.photos/201/200', hint: 'fantasy world' },
+    { value: 'chibi', label: 'Chibi', image: 'https://picsum.photos/201/201', hint: 'chibi character' },
+]
 
 export const AIPanel: FC<AIPanelProps> = ({
   animeStyle,
@@ -42,41 +44,46 @@ export const AIPanel: FC<AIPanelProps> = ({
   };
 
   return (
-    <aside className="w-full h-full bg-card/50 backdrop-blur-sm flex-col p-4 z-10 gap-4 md:flex md:w-96 md:h-screen md:border-l md:border-primary/20">
+    <aside className="w-full h-full bg-card/50 backdrop-blur-sm flex-col p-4 z-10 gap-4 md:flex md:w-96 md:border-l md:border-primary/20">
       <ScrollArea className="flex-1">
-        <div className="space-y-4 pr-2">
+        <div className="space-y-6 pr-2">
           <h2 className="text-xl font-bold text-glow-accent text-center hidden md:block">AI Generation</h2>
 
           <div className="space-y-4">
-            <Label htmlFor="ai-style" className="text-glow-accent">
+            <Label className="text-glow-accent">
               Anime Style
             </Label>
-            <Select
-              value={animeStyle}
-              onValueChange={(v: AnimeStyle) => setAnimeStyle(v)}
+            
+            <RadioGroup 
+                value={animeStyle} 
+                onValueChange={(v: AnimeStyle) => setAnimeStyle(v)}
+                className="grid grid-cols-2 gap-2"
             >
-              <SelectTrigger id="ai-style">
-                <SelectValue placeholder="Select Style" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="cyberpunk">Cyberpunk</SelectItem>
-                <SelectItem value="classic">Classic</SelectItem>
-                <SelectItem value="fantasy">Fantasy</SelectItem>
-                <SelectItem value="chibi">Chibi</SelectItem>
-              </SelectContent>
-            </Select>
+                {styleOptions.map((option) => (
+                    <RadioGroupItem key={option.value} value={option.value} id={option.value} className="sr-only" />
+                ))}
+                {styleOptions.map((option) => (
+                     <Label key={option.value} htmlFor={option.value} className={cn("cursor-pointer rounded-md border-2 border-muted bg-popover hover:bg-accent/20 hover:border-accent has-[:checked]:border-accent has-[:checked]:neon-glow-accent flex flex-col items-center justify-center p-2 gap-2",
+                        animeStyle === option.value && "border-accent neon-glow-accent"
+                     )}>
+                        <Image src={option.image} alt={option.label} width={80} height={80} className="rounded-md aspect-square object-cover" data-ai-hint={option.hint} />
+                        <span className="text-sm font-medium">{option.label}</span>
+                     </Label>
+                ))}
+            </RadioGroup>
+
             <Button
               onClick={onGenerate}
               disabled={isGenerating}
-              className="w-full neon-glow-accent h-12"
+              className="w-full neon-glow-accent h-12 text-lg"
             >
               {isGenerating ? 'Generating...' : <><Sparkles className="mr-2" />Generate Image</>}
             </Button>
           </div>
 
-          <div className="flex-1 flex flex-col gap-2">
+          <div className="flex-1 flex flex-col gap-4">
             <Label className="text-glow-accent">Result</Label>
-            <div className="aspect-square w-full relative flex items-center justify-center rounded-md overflow-hidden border border-primary/20 bg-black/20">
+            <div className="aspect-square w-full relative flex items-center justify-center rounded-md overflow-hidden border-2 border-primary/20 bg-black/20">
                 {isGenerating && <Loader2 className="h-16 w-16 animate-spin text-primary" />}
                 {!isGenerating && generatedImage && (
                     <Image
@@ -93,7 +100,7 @@ export const AIPanel: FC<AIPanelProps> = ({
                     </div>
                 )}
             </div>
-            <Button onClick={handleDownload} disabled={!generatedImage || isGenerating} className="w-full neon-glow">
+            <Button onClick={handleDownload} disabled={!generatedImage || isGenerating} className="w-full neon-glow h-12 text-lg">
                 <Download className="mr-2 h-4 w-4" />
                 Download
             </Button>
