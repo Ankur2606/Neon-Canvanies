@@ -1,3 +1,4 @@
+
 import {
   Dialog,
   DialogContent,
@@ -8,7 +9,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { NeonCanvasLogo } from './neon-canvas-logo';
-import { Paintbrush, Sparkles, Layers } from 'lucide-react';
+import { Paintbrush, Sparkles, PanelLeft } from 'lucide-react';
 
 interface WelcomeDialogProps {
   open: boolean;
@@ -43,10 +44,10 @@ export const WelcomeDialog = ({ open, onOpenChange }: WelcomeDialogProps) => (
           </div>
         </div>
         <div className="flex items-start gap-4">
-          <Layers className="h-8 w-8 text-accent mt-1 flex-shrink-0" />
+          <PanelLeft className="h-8 w-8 text-accent mt-1 flex-shrink-0" />
           <div>
-            <h3 className="font-bold text-foreground">More Features Coming</h3>
-            <p className="text-muted-foreground">Stay tuned for future updates, including an advanced layer system and more export options.</p>
+            <h3 className="font-bold text-foreground">Collapsible Interface</h3>
+            <p className="text-muted-foreground">Toggle the toolbars to maximize your drawing space. Use the side-panel for AI generation on desktop.</p>
           </div>
         </div>
       </div>

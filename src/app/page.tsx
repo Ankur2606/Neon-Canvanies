@@ -1,39 +1,48 @@
+
 'use client';
 
 import type { FC } from 'react';
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { generateAnimeImage, type GenerateAnimeImageInput } from '@/ai/flows/generate-anime-image';
 import { useToast } from "@/hooks/use-toast";
 import { DrawingCanvas, type DrawingCanvasRef } from '@/components/drawing-canvas';
+import { Sidebar, SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { Toolbar } from '@/components/toolbar';
-import { WelcomeDialog } from '@/components/welcome-dialog';
-import { ResultDialog } from '@/components/result-dialog';
-import { useLocalStorage } from '@/hooks/use-local-storage';
+import { AIPanel } from '@/components/ai-panel';
+import { Button } from '@/components/ui/button';
+import { PanelLeft, X } from 'lucide-react';
+import { useSidebar } from '@/hooks/use-sidebar';
 
 export type Tool = 'brush' | 'eraser';
 export type AnimeStyle = 'classic' | 'cyberpunk' | 'fantasy' | 'chibi';
 
+const MobileSidebarToggle = () => {
+  const { open, setOpen } = useSidebar();
+  return (
+    <Button 
+      variant="ghost" 
+      size="icon"
+      className="md:hidden fixed top-2 left-2 z-20 bg-card/50 backdrop-blur-sm"
+      onClick={() => setOpen(!open)}
+    >
+      {open ? <X /> : <PanelLeft />}
+    </Button>
+  );
+};
+
+
 const NeonCanvasPage: FC = () => {
   const { toast } = useToast();
-  const [tool, setTool] = useLocalStorage<Tool>('neon-canvas-tool', 'brush');
-  const [color, setColor] = useLocalStorage<string>('neon-canvas-color', '#FF32F0');
-  const [brushSize, setBrushSize] = useLocalStorage<number>('neon-canvas-brushSize', 10);
-  const [opacity, setOpacity] = useLocalStorage<number>('neon-canvas-opacity', 1);
+  const [tool, setTool] = useState<Tool>('brush');
+  const [color, setColor] = useState<string>('#FF32F0');
+  const [brushSize, setBrushSize] = useState<number>(10);
+  const [opacity, setOpacity] = useState<number>(1);
   const [animeStyle, setAnimeStyle] = useState<AnimeStyle>('cyberpunk');
 
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
-  const [isWelcomeOpen, setWelcomeOpen] = useState(false);
   
   const canvasRef = useRef<DrawingCanvasRef>(null);
-
-  useEffect(() => {
-    const isFirstVisit = !localStorage.getItem('neon-canvas-visited');
-    if (isFirstVisit) {
-      setWelcomeOpen(true);
-      localStorage.setItem('neon-canvas-visited', 'true');
-    }
-  }, []);
 
   const handleClear = useCallback(() => {
     canvasRef.current?.clearCanvas();
@@ -81,6 +90,7 @@ const NeonCanvasPage: FC = () => {
     }
     
     setIsGenerating(true);
+    setGeneratedImage(null);
     try {
       const input: GenerateAnimeImageInput = { drawingDataUri, animeStyle };
       const result = await generateAnimeImage(input);
@@ -98,45 +108,51 @@ const NeonCanvasPage: FC = () => {
   };
 
   return (
-    <>
-      <WelcomeDialog open={isWelcomeOpen} onOpenChange={setWelcomeOpen} />
-      <ResultDialog 
-        open={!!generatedImage} 
-        onOpenChange={(isOpen) => !isOpen && setGeneratedImage(null)}
-        imageUrl={generatedImage}
-      />
-      
-      <div className="h-screen w-screen bg-background font-body text-foreground flex flex-col md:flex-row overflow-hidden">
-        <Toolbar
-          tool={tool}
-          setTool={setTool}
-          color={color}
-          setColor={setColor}
-          brushSize={brushSize}
-          setBrushSize={setBrushSize}
-          opacity={opacity}
-          setOpacity={setOpacity}
+    <SidebarProvider>
+      <div className="h-screen w-screen bg-background font-body text-foreground flex overflow-hidden">
+        <MobileSidebarToggle />
+        <Sidebar collapsible="icon" className="md:w-80">
+          <Toolbar
+            tool={tool}
+            setTool={setTool}
+            color={color}
+            setColor={setColor}
+            brushSize={brushSize}
+            setBrushSize={setBrushSize}
+            opacity={opacity}
+            setOpacity={setOpacity}
+            onClear={handleClear}
+            onUndo={handleUndo}
+            onRedo={handleRedo}
+            onExport={handleExport}
+            onImport={handleImport}
+          />
+        </Sidebar>
+        
+        <SidebarInset className="flex-1 flex flex-col relative bg-black/20">
+            <header className="absolute top-2 right-2 z-10">
+                 <SidebarTrigger className="hidden md:flex" />
+            </header>
+            <main className="flex-1 relative">
+                <DrawingCanvas
+                    ref={canvasRef}
+                    tool={tool}
+                    color={color}
+                    brushSize={brushSize}
+                    opacity={opacity}
+                />
+            </main>
+        </SidebarInset>
+
+        <AIPanel
           animeStyle={animeStyle}
           setAnimeStyle={setAnimeStyle}
           isGenerating={isGenerating}
           onGenerate={handleGenerate}
-          onClear={handleClear}
-          onUndo={handleUndo}
-          onRedo={handleRedo}
-          onExport={handleExport}
-          onImport={handleImport}
+          generatedImage={generatedImage}
         />
-        <main className="flex-1 relative bg-black/20 h-full w-full">
-          <DrawingCanvas
-            ref={canvasRef}
-            tool={tool}
-            color={color}
-            brushSize={brushSize}
-            opacity={opacity}
-          />
-        </main>
       </div>
-    </>
+    </SidebarProvider>
   );
 };
 

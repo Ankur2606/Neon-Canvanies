@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -55,7 +56,6 @@
   }
   body {
     @apply bg-background text-foreground;
-    background: radial-gradient(ellipse at bottom, hsl(var(--background)) 0%, #090A0F 100%);
   }
 }
 
