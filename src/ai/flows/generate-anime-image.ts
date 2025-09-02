@@ -62,7 +62,17 @@ const generateAnimeImageFlow = ai.defineFlow(
       model: 'googleai/gemini-2.0-flash-preview-image-generation',
       prompt: [
         {media: {url: input.drawingDataUri}},
-        {text: `Analyze the provided drawing and interpret its subject (e.g., face, character, object). Then, generate a new, aesthetically pleasing image that brings that subject to life in a refined '{{animeStyle}}' theme. Focus on creating a high-quality, artistic interpretation rather than strictly adhering to the original colors. The final image should be a beautiful and imaginative piece of art.`},
+        {text: `You are an expert creative artist. Your task is to analyze the provided user's drawing and identify its core subject (e.g., a person's face, a full character, an animal, an object). Then, you will generate a new, high-quality, aesthetically pleasing image that artistically re-imagines that subject, strictly adhering to the selected theme: '{{animeStyle}}'.
+
+Your primary goal is to transform the drawing, not just copy it. Do not focus on replicating the original colors; instead, create a beautiful and imaginative piece of art that embodies the chosen style.
+
+Follow these specific instructions for the selected '{{animeStyle}}':
+- If the style is 'Anime': Re-create the subject in a classic, well-proportioned anime style. Focus on clean lines, expressive eyes, and standard anime aesthetics.
+- If the style is 'Cyberpunk': Transform the subject with futuristic elements. Incorporate neon lighting, cybernetic augmentations, high-tech clothing, or a dystopian city background. The result should feel gritty, advanced, and distinctly cyberpunk.
+- If the style is 'Fantasy': Re-imagine the subject in a magical or mythical setting. Add elements like glowing magical effects, medieval armor, enchanted forests, or fantasy creatures. The image should evoke a sense of wonder and adventure.
+- If the style is 'Chibi': Redraw the subject in a "super-deformed" style. This means a large head, small body, and exaggeratedly cute features. The result should be playful, charming, and adorable.
+
+The final image must be a polished, artistic, and beautiful piece that is a clear and faithful representation of the selected style.`},
       ],
       config: {
         responseModalities: ['TEXT', 'IMAGE'], // MUST provide both TEXT and IMAGE, IMAGE only won't work
