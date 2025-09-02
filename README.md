@@ -1,10 +1,10 @@
-# ✨ Welcome to Neon Canvas! ✨
+# ✨ Welcome to Neon Canvanies! ✨
 
-Hey there, future artist of the neon-drenched dystopia! Welcome to **Neon Canvas**, your very own corner of the internet for creating dazzling cyberpunk masterpieces. 🎨
+Hey there, future artist of the neon-drenched dystopia! Welcome to **Neon Canvanies**, your very own corner of the internet for creating dazzling cyberpunk masterpieces. 🎨
 
 ## What is this magical place? 🌃
 
-Neon Canvas is a super fun drawing application with a slick cyberpunk theme. Think flying cars, rainy cityscapes, and glowing neon signs... but you're the one creating the art! Whether you're just doodling or creating your next magnum opus, we've got the tools to bring your ideas to life.
+Neon Canvanies is a super fun drawing application with a slick cyberpunk theme. Think flying cars, rainy cityscapes, and glowing neon signs... but you're the one creating the art! Whether you're just doodling or creating your next magnum opus, we've got the tools to bring your ideas to life.
 
 ## 🤖 AI-Powered Augmentations! 🤖
 

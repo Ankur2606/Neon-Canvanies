@@ -21,7 +21,7 @@ export const ResultDialog = ({ open, onOpenChange, imageUrl }: ResultDialogProps
     if (!imageUrl) return;
     const link = document.createElement('a');
     link.href = imageUrl;
-    link.download = 'neon-canvas-ai-art.png';
+    link.download = 'neon-canvanies-ai-art.png';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

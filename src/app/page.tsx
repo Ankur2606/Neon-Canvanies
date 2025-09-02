@@ -44,7 +44,7 @@ const NeonCanvasPage: FC = () => {
     const dataUrl = canvasRef.current?.exportAsPNG();
     if (dataUrl) {
       const link = document.createElement('a');
-      link.download = 'neon-canvas-creation.png';
+      link.download = 'neon-canvanies-creation.png';
       link.href = dataUrl;
       link.click();
     }

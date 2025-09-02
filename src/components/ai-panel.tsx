@@ -36,7 +36,7 @@ export const AIPanel: FC<AIPanelProps> = ({
     if (!generatedImage) return;
     const link = document.createElement('a');
     link.href = generatedImage;
-    link.download = 'neon-canvas-ai-art.png';
+    link.download = 'neon-canvanies-ai-art.png';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -45,7 +45,7 @@ export const AIPanel: FC<AIPanelProps> = ({
   return (
     <aside className="w-full h-full bg-card/50 backdrop-blur-sm flex-col z-10 gap-4 md:flex md:w-96 md:border-l md:border-primary/20">
       <ScrollArea className="flex-1">
-        <div className="space-y-6 p-4 md:p-4 md:pr-4">
+        <div className="space-y-6 p-4 md:p-6">
           <h2 className="text-xl font-bold text-glow-accent text-center hidden md:block">AI Generation</h2>
 
           <div className="space-y-4">

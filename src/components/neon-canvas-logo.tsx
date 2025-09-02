@@ -19,7 +19,7 @@ export const NeonCanvasLogo: FC<{ className?: string }> = ({ className }) => (
       />
     </svg>
     <h1 className="ml-3 text-2xl font-headline font-bold text-glow-accent">
-      Neon Canvas
+      Neon Canvanies
     </h1>
   </div>
 );
