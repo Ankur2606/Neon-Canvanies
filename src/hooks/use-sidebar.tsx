@@ -2,18 +2,7 @@
 "use client"
 
 import * as React from "react"
-
-export const SIDEBAR_COOKIE_NAME = "sidebar_state"
-export const SIDEBAR_KEYBOARD_SHORTCUT = "b"
-
-export type SidebarContext = {
-  open: boolean
-  setOpen: (open: boolean) => void
-  isMobile: boolean
-  toggleSidebar: () => void
-}
-
-export const SidebarProviderContext = React.createContext<SidebarContext | null>(null)
+import { SidebarProviderContext, type SidebarContext } from "@/components/ui/sidebar"
 
 export function useSidebar() {
   const context = React.useContext(SidebarProviderContext)

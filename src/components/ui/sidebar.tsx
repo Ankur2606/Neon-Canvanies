@@ -15,6 +15,16 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 export const SIDEBAR_COOKIE_NAME = "sidebar_state"
 export const SIDEBAR_KEYBOARD_SHORTCUT = "b"
 
+export type SidebarContext = {
+    open: boolean
+    setOpen: (open: boolean) => void
+    isMobile: boolean
+    toggleSidebar: () => void
+  }
+  
+export const SidebarProviderContext = React.createContext<SidebarContext | null>(null)
+
+
 export const SidebarProvider = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<"div"> & {
@@ -117,7 +127,7 @@ const Sidebar = React.forwardRef<
             side={side}
           >
              <SheetHeader className="p-4">
-                <SheetTitle className="sr-only">Toolbar</SheetTitle>
+                <SheetTitle>Toolbar</SheetTitle>
              </SheetHeader>
             <div className="flex h-full w-full flex-col">{children}</div>
           </SheetContent>
@@ -186,14 +196,6 @@ const SidebarInset = React.forwardRef<
   )
 })
 SidebarInset.displayName = "SidebarInset"
-
-
-export const SidebarProviderContext = React.createContext<{
-  open: boolean;
-  setOpen: (open: boolean) => void;
-  isMobile: boolean;
-  toggleSidebar: () => void;
-} | null>(null);
 
 
 export {
