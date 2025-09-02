@@ -1,12 +1,16 @@
 
 'use client';
 
-import type { Dispatch, FC, SetStateAction, ReactNode } from 'react';
+import type { Dispatch, FC, SetStateAction, ReactNode, useState } from 'react';
 import { Sidebar, SidebarInset } from '@/components/ui/sidebar';
 import { Toolbar } from '@/components/toolbar';
 import { AIPanel } from '@/components/ai-panel';
 import { Header } from '@/components/header';
 import type { Tool, AnimeStyle } from '@/app/page';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { Button } from './ui/button';
+import { Sparkles, X } from 'lucide-react';
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -30,6 +34,29 @@ interface AppLayoutProps {
   generatedImage: string | null;
 }
 
+const MobileAIPanelDialog = ({ children }: { children: ReactNode }) => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="md:hidden"
+        onClick={() => setOpen(true)}
+      >
+        <Sparkles />
+      </Button>
+      <DialogContent className="h-full max-h-[80vh] flex flex-col">
+        <DialogHeader>
+          <DialogTitle>AI Generation</DialogTitle>
+        </DialogHeader>
+        {children}
+      </DialogContent>
+    </Dialog>
+  );
+};
+
 export const AppLayout: FC<AppLayoutProps> = ({
   children,
   tool,
@@ -51,6 +78,8 @@ export const AppLayout: FC<AppLayoutProps> = ({
   onGenerate,
   generatedImage,
 }) => {
+  const isMobile = useIsMobile();
+
   return (
     <div className="h-screen w-screen bg-background font-body text-foreground flex overflow-hidden">
       <Sidebar collapsible="icon" className="md:w-80">
@@ -72,19 +101,33 @@ export const AppLayout: FC<AppLayoutProps> = ({
       </Sidebar>
       
       <SidebarInset className="flex-1 flex flex-col relative bg-black/20">
-          <Header />
+          <Header>
+            {isMobile && (
+              <MobileAIPanelDialog>
+                  <AIPanel
+                    animeStyle={animeStyle}
+                    setAnimeStyle={setAnimeStyle}
+                    isGenerating={isGenerating}
+                    onGenerate={onGenerate}
+                    generatedImage={generatedImage}
+                  />
+              </MobileAIPanelDialog>
+            )}
+          </Header>
           <main className="flex-1 relative">
             {children}
           </main>
       </SidebarInset>
 
-      <AIPanel
-        animeStyle={animeStyle}
-        setAnimeStyle={setAnimeStyle}
-        isGenerating={isGenerating}
-        onGenerate={onGenerate}
-        generatedImage={generatedImage}
-      />
+      <div className="hidden md:flex">
+        <AIPanel
+          animeStyle={animeStyle}
+          setAnimeStyle={setAnimeStyle}
+          isGenerating={isGenerating}
+          onGenerate={onGenerate}
+          generatedImage={generatedImage}
+        />
+      </div>
     </div>
   );
 };

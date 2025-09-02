@@ -7,13 +7,9 @@ import { PanelLeft } from "lucide-react"
 
 import { useLocalStorage } from "@/hooks/use-local-storage"
 import { useIsMobile } from "@/hooks/use-mobile"
-import { useSidebar } from "@/hooks/use-sidebar"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
-
-export const SIDEBAR_COOKIE_NAME = "sidebar_state"
-export const SIDEBAR_KEYBOARD_SHORTCUT = "b"
 
 export type SidebarContext = {
     open: boolean
@@ -51,7 +47,7 @@ export const SidebarProvider = React.forwardRef<
     React.useEffect(() => {
       const handleKeyDown = (event: KeyboardEvent) => {
         if (
-          event.key === SIDEBAR_KEYBOARD_SHORTCUT &&
+          event.key === 'b' &&
           (event.metaKey || event.ctrlKey)
         ) {
           event.preventDefault()
@@ -197,6 +193,16 @@ const SidebarInset = React.forwardRef<
 })
 SidebarInset.displayName = "SidebarInset"
 
+export function useSidebar() {
+    const context = React.useContext(SidebarProviderContext)
+    if (!context) {
+      throw new Error("useSidebar must be used within a SidebarProvider.")
+    }
+  
+    return context
+}
+
+export const SIDEBAR_COOKIE_NAME = "sidebar_state"
 
 export {
   Sidebar,

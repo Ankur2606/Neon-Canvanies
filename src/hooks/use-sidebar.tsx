@@ -2,7 +2,7 @@
 "use client"
 
 import * as React from "react"
-import { SidebarProviderContext, type SidebarContext } from "@/components/ui/sidebar"
+import { SidebarProviderContext } from "@/components/ui/sidebar"
 
 export function useSidebar() {
   const context = React.useContext(SidebarProviderContext)

@@ -42,6 +42,7 @@ export const Toolbar: FC<ToolbarProps> = ({
   const handleFileImport = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       onImport(e.target.files[0]);
+      e.target.value = ''; // Reset file input
     }
   };
 
@@ -99,11 +100,11 @@ export const Toolbar: FC<ToolbarProps> = ({
                  <Button variant="destructive" onClick={onClear} className="w-full"><Trash2 className="mr-2"/>Clear Canvas</Button>
                  <Button onClick={onExport} className="w-full"><Download className="mr-2"/>Export PNG</Button>
                  <Button asChild variant="outline" className="w-full">
-                  <label htmlFor="import-file" className="cursor-pointer flex items-center justify-center">
+                  <label htmlFor="import-file" className="cursor-pointer flex items-center justify-center w-full h-full">
                     <Upload className="mr-2" /> Import Image
-                    <input id="import-file" type="file" accept="image/*" className="sr-only" onChange={handleFileImport} />
                   </label>
                  </Button>
+                 <input id="import-file" type="file" accept="image/*" className="sr-only" onChange={handleFileImport} />
               </div>
             </div>
         </div>

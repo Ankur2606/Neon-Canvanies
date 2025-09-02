@@ -42,61 +42,64 @@ export const AIPanel: FC<AIPanelProps> = ({
   };
 
   return (
-    <aside className="hidden md:flex w-96 h-screen bg-card/50 backdrop-blur-sm border-l border-primary/20 flex-col p-4 z-10 gap-4">
-      <h2 className="text-xl font-bold text-glow-accent text-center">AI Generation</h2>
+    <aside className="w-full h-full bg-card/50 backdrop-blur-sm flex-col p-4 z-10 gap-4 md:flex md:w-96 md:h-screen md:border-l md:border-primary/20">
+      <ScrollArea className="flex-1">
+        <div className="space-y-4 pr-2">
+          <h2 className="text-xl font-bold text-glow-accent text-center hidden md:block">AI Generation</h2>
 
-      <div className="space-y-4">
-        <Label htmlFor="ai-style" className="text-glow-accent">
-          Anime Style
-        </Label>
-        <Select
-          value={animeStyle}
-          onValueChange={(v: AnimeStyle) => setAnimeStyle(v)}
-        >
-          <SelectTrigger id="ai-style">
-            <SelectValue placeholder="Select Style" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="cyberpunk">Cyberpunk</SelectItem>
-            <SelectItem value="classic">Classic</SelectItem>
-            <SelectItem value="fantasy">Fantasy</SelectItem>
-            <SelectItem value="chibi">Chibi</SelectItem>
-          </SelectContent>
-        </Select>
-        <Button
-          onClick={onGenerate}
-          disabled={isGenerating}
-          className="w-full neon-glow-accent h-12"
-        >
-          {isGenerating ? 'Generating...' : <><Sparkles className="mr-2" />Generate Image</>}
-        </Button>
-      </div>
+          <div className="space-y-4">
+            <Label htmlFor="ai-style" className="text-glow-accent">
+              Anime Style
+            </Label>
+            <Select
+              value={animeStyle}
+              onValueChange={(v: AnimeStyle) => setAnimeStyle(v)}
+            >
+              <SelectTrigger id="ai-style">
+                <SelectValue placeholder="Select Style" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="cyberpunk">Cyberpunk</SelectItem>
+                <SelectItem value="classic">Classic</SelectItem>
+                <SelectItem value="fantasy">Fantasy</SelectItem>
+                <SelectItem value="chibi">Chibi</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button
+              onClick={onGenerate}
+              disabled={isGenerating}
+              className="w-full neon-glow-accent h-12"
+            >
+              {isGenerating ? 'Generating...' : <><Sparkles className="mr-2" />Generate Image</>}
+            </Button>
+          </div>
 
-      <div className="flex-1 flex flex-col gap-2">
-        <Label className="text-glow-accent">Result</Label>
-        <div className="aspect-square w-full relative flex items-center justify-center rounded-md overflow-hidden border border-primary/20 bg-black/20">
-            {isGenerating && <Loader2 className="h-16 w-16 animate-spin text-primary" />}
-            {!isGenerating && generatedImage && (
-                <Image
-                src={generatedImage}
-                alt="Generated AI anime"
-                fill
-                className="object-contain"
-                />
-            )}
-            {!isGenerating && !generatedImage && (
-                <div className="text-center text-muted-foreground p-4">
-                    <Sparkles className="mx-auto h-10 w-10 mb-2"/>
-                    <p>Your generated image will appear here.</p>
-                </div>
-            )}
+          <div className="flex-1 flex flex-col gap-2">
+            <Label className="text-glow-accent">Result</Label>
+            <div className="aspect-square w-full relative flex items-center justify-center rounded-md overflow-hidden border border-primary/20 bg-black/20">
+                {isGenerating && <Loader2 className="h-16 w-16 animate-spin text-primary" />}
+                {!isGenerating && generatedImage && (
+                    <Image
+                    src={generatedImage}
+                    alt="Generated AI anime"
+                    fill
+                    className="object-contain"
+                    />
+                )}
+                {!isGenerating && !generatedImage && (
+                    <div className="text-center text-muted-foreground p-4">
+                        <Sparkles className="mx-auto h-10 w-10 mb-2"/>
+                        <p>Your generated image will appear here.</p>
+                    </div>
+                )}
+            </div>
+            <Button onClick={handleDownload} disabled={!generatedImage || isGenerating} className="w-full neon-glow">
+                <Download className="mr-2 h-4 w-4" />
+                Download
+            </Button>
+          </div>
         </div>
-        <Button onClick={handleDownload} disabled={!generatedImage || isGenerating} className="w-full neon-glow">
-            <Download className="mr-2 h-4 w-4" />
-            Download
-        </Button>
-      </div>
+      </ScrollArea>
     </aside>
   );
 };
-

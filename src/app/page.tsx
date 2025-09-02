@@ -2,11 +2,13 @@
 'use client';
 
 import type { FC } from 'react';
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { generateAnimeImage, type GenerateAnimeImageInput } from '@/ai/flows/generate-anime-image';
 import { useToast } from "@/hooks/use-toast";
 import { DrawingCanvas, type DrawingCanvasRef } from '@/components/drawing-canvas';
 import { AppLayout } from '@/components/app-layout';
+import { WelcomeDialog } from '@/components/welcome-dialog';
+import { useLocalStorage } from '@/hooks/use-local-storage';
 
 export type Tool = 'brush' | 'eraser';
 export type AnimeStyle = 'classic' | 'cyberpunk' | 'fantasy' | 'chibi';
@@ -21,6 +23,8 @@ const NeonCanvasPage: FC = () => {
 
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
+
+  const [showWelcomeDialog, setShowWelcomeDialog] = useLocalStorage('showWelcomeDialog', true);
   
   const canvasRef = useRef<DrawingCanvasRef>(null);
 
@@ -88,6 +92,8 @@ const NeonCanvasPage: FC = () => {
   };
 
   return (
+    <>
+      <WelcomeDialog open={showWelcomeDialog} onOpenChange={setShowWelcomeDialog} />
       <AppLayout
         tool={tool}
         setTool={setTool}
@@ -116,6 +122,7 @@ const NeonCanvasPage: FC = () => {
             opacity={opacity}
         />
       </AppLayout>
+    </>
   );
 };
 
