@@ -8,8 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Sparkles, Loader2, Download } from 'lucide-react';
 import type { AnimeStyle } from '@/app/page';
 import { ScrollArea } from './ui/scroll-area';
-import { RadioGroup, RadioGroupItem } from './ui/radio-group';
-import { cn } from '@/lib/utils';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 
 interface AIPanelProps {
   animeStyle: AnimeStyle;
@@ -19,11 +18,11 @@ interface AIPanelProps {
   generatedImage: string | null;
 }
 
-const styleOptions: { value: AnimeStyle; label: string; image: string, hint: string }[] = [
-    { value: 'cyberpunk', label: 'Cyberpunk', image: 'https://picsum.photos/200/200', hint: 'cyberpunk city' },
-    { value: 'classic', label: 'Classic', image: 'https://picsum.photos/200/201', hint: 'classic anime' },
-    { value: 'fantasy', label: 'Fantasy', image: 'https://picsum.photos/201/200', hint: 'fantasy world' },
-    { value: 'chibi', label: 'Chibi', image: 'https://picsum.photos/201/201', hint: 'chibi character' },
+const styleOptions: { value: AnimeStyle; label: string }[] = [
+    { value: 'cyberpunk', label: 'Cyberpunk' },
+    { value: 'classic', label: 'Classic' },
+    { value: 'fantasy', label: 'Fantasy' },
+    { value: 'chibi', label: 'Chibi' },
 ]
 
 export const AIPanel: FC<AIPanelProps> = ({
@@ -54,23 +53,16 @@ export const AIPanel: FC<AIPanelProps> = ({
               Anime Style
             </Label>
             
-            <RadioGroup 
-                value={animeStyle} 
-                onValueChange={(v: AnimeStyle) => setAnimeStyle(v)}
-                className="grid grid-cols-2 gap-2"
-            >
-                {styleOptions.map((option) => (
-                    <RadioGroupItem key={option.value} value={option.value} id={option.value} className="sr-only" />
-                ))}
-                {styleOptions.map((option) => (
-                     <Label key={option.value} htmlFor={option.value} className={cn("cursor-pointer rounded-md border-2 border-muted bg-popover hover:bg-accent/20 hover:border-accent has-[:checked]:border-accent has-[:checked]:neon-glow-accent flex flex-col items-center justify-center p-2 gap-2",
-                        animeStyle === option.value && "border-accent neon-glow-accent"
-                     )}>
-                        <Image src={option.image} alt={option.label} width={80} height={80} className="rounded-md aspect-square object-cover" data-ai-hint={option.hint} />
-                        <span className="text-sm font-medium">{option.label}</span>
-                     </Label>
-                ))}
-            </RadioGroup>
+            <Select value={animeStyle} onValueChange={(v: AnimeStyle) => setAnimeStyle(v)}>
+                <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select a style" />
+                </SelectTrigger>
+                <SelectContent>
+                    {styleOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                    ))}
+                </SelectContent>
+            </Select>
 
             <Button
               onClick={onGenerate}
