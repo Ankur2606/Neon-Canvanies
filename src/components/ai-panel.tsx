@@ -20,7 +20,7 @@ interface AIPanelProps {
 
 const styleOptions: { value: AnimeStyle; label: string }[] = [
     { value: 'cyberpunk', label: 'Cyberpunk' },
-    { value: 'classic', label: 'Classic' },
+    { value: 'classic', label: 'Anime' },
     { value: 'fantasy', label: 'Fantasy' },
     { value: 'chibi', label: 'Chibi' },
 ]
@@ -43,14 +43,14 @@ export const AIPanel: FC<AIPanelProps> = ({
   };
 
   return (
-    <aside className="w-full h-full bg-card/50 backdrop-blur-sm flex-col z-10 gap-4 md:flex md:w-96 md:border-l md:border-primary/20 md:p-4">
+    <aside className="w-full h-full bg-card/50 backdrop-blur-sm flex-col z-10 gap-4 md:flex md:w-96 md:border-l md:border-primary/20">
       <ScrollArea className="flex-1">
-        <div className="space-y-6 p-4 md:p-0 md:pr-2">
+        <div className="space-y-6 p-4 md:p-4 md:pr-4">
           <h2 className="text-xl font-bold text-glow-accent text-center hidden md:block">AI Generation</h2>
 
           <div className="space-y-4">
             <Label className="text-glow-accent">
-              Anime Style
+              Edit Style
             </Label>
             
             <Select value={animeStyle} onValueChange={(v: AnimeStyle) => setAnimeStyle(v)}>

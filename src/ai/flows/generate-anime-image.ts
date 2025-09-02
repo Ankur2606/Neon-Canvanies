@@ -62,7 +62,7 @@ const generateAnimeImageFlow = ai.defineFlow(
       model: 'googleai/gemini-2.0-flash-preview-image-generation',
       prompt: [
         {media: {url: input.drawingDataUri}},
-        {text: `generate an image of this character in ${input.animeStyle} anime style`},
+        {text: `Analyze the provided drawing and interpret its subject (e.g., face, character, object). Then, generate a new, aesthetically pleasing image that brings that subject to life in a refined '{{animeStyle}}' theme. Focus on creating a high-quality, artistic interpretation rather than strictly adhering to the original colors. The final image should be a beautiful and imaginative piece of art.`},
       ],
       config: {
         responseModalities: ['TEXT', 'IMAGE'], // MUST provide both TEXT and IMAGE, IMAGE only won't work
