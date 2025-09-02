@@ -5,10 +5,75 @@ import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { PanelLeft } from "lucide-react"
 
+import { SidebarProviderContext, SIDEBAR_COOKIE_NAME, SIDEBAR_KEYBOARD_SHORTCUT } from "@/hooks/use-sidebar"
+import { useLocalStorage } from "@/hooks/use-local-storage"
+import { useIsMobile } from "@/hooks/use-mobile"
 import { useSidebar } from "@/hooks/use-sidebar"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent } from "@/components/ui/sheet"
+
+const SidebarProvider = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentProps<"div"> & {
+    defaultOpen?: boolean
+    open?: boolean
+    onOpenChange?: (open: boolean) => void
+  }
+>(
+  (
+    {
+      defaultOpen = true,
+      open: openProp,
+      onOpenChange: setOpenProp,
+      children,
+      ...props
+    },
+    ref
+  ) => {
+    const isMobile = useIsMobile()
+    const [open, setOpen] = useLocalStorage(SIDEBAR_COOKIE_NAME, defaultOpen)
+
+    const toggleSidebar = React.useCallback(() => {
+        setOpen(!open);
+    }, [open, setOpen])
+
+    React.useEffect(() => {
+      const handleKeyDown = (event: KeyboardEvent) => {
+        if (
+          event.key === SIDEBAR_KEYBOARD_SHORTCUT &&
+          (event.metaKey || event.ctrlKey)
+        ) {
+          event.preventDefault()
+          toggleSidebar()
+        }
+      }
+
+      window.addEventListener("keydown", handleKeyDown)
+      return () => window.removeEventListener("keydown", handleKeyDown)
+    }, [toggleSidebar])
+
+    const contextValue = React.useMemo(
+      () => ({
+        open,
+        setOpen,
+        isMobile,
+        toggleSidebar,
+      }),
+      [open, setOpen, isMobile, toggleSidebar]
+    )
+
+    return (
+      <SidebarProviderContext.Provider value={contextValue}>
+        <div ref={ref} {...props}>
+            {children}
+        </div>
+      </SidebarProviderContext.Provider>
+    )
+  }
+)
+SidebarProvider.displayName = "SidebarProvider"
+
 
 const Sidebar = React.forwardRef<
   HTMLDivElement,
@@ -124,4 +189,5 @@ export {
   Sidebar,
   SidebarInset,
   SidebarTrigger,
+  SidebarProvider,
 }
