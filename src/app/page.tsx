@@ -68,7 +68,7 @@ const NeonCanvasPage: FC = () => {
       toast({
         variant: 'destructive',
         title: 'Canvas is empty',
-        description: 'Draw something on the canvas before generating.',
+        description: 'Please draw something on the canvas before generating an image.',
       });
       return;
     }
@@ -78,13 +78,17 @@ const NeonCanvasPage: FC = () => {
     try {
       const input: GenerateAnimeImageInput = { drawingDataUri, animeStyle };
       const result = await generateAnimeImage(input);
+      if (!result?.animeImageDataUri) {
+          throw new Error('The AI did not return an image. This might be due to a content policy violation or a temporary issue. Please try again with a different drawing.');
+      }
       setGeneratedImage(result.animeImageDataUri);
     } catch (error) {
       console.error('AI generation failed:', error);
+      const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred.';
       toast({
         variant: 'destructive',
         title: 'Generation Failed',
-        description: 'Could not generate the image. Please try again.',
+        description: errorMessage,
       });
     } finally {
       setIsGenerating(false);
