@@ -10,22 +10,14 @@ import {
   Trash2,
   Download,
   Upload,
-  Palette,
-  File,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { NeonCanvasLogo } from './neon-canvas-logo';
 import { Separator } from './ui/separator';
 import type { Tool } from '@/app/page';
 import { ScrollArea } from './ui/scroll-area';
-
-const cyberpunkColors = [
-  '#FF32F0', '#BE42FF', '#00FFFF', '#FFD700',
-  '#7FFF00', '#FF4500', '#FFFFFF', '#949494',
-];
 
 interface ToolbarProps {
   tool: Tool;
@@ -83,19 +75,17 @@ export const Toolbar: FC<ToolbarProps> = ({
             <Separator className="my-4 bg-primary/20" />
 
             <div>
-              <Label className="text-glow-accent px-1">Color</Label>
-              <div className="mt-2 space-y-4">
-                <div className="grid grid-cols-4 gap-2">
-                  {cyberpunkColors.map((c) => (
-                    <button key={c} onClick={() => setColor(c)} style={{ backgroundColor: c }} className={`w-full h-12 rounded-md transition-all ${color === c ? 'ring-2 ring-offset-2 ring-offset-background ring-accent' : ''}`} />
-                  ))}
+                <Label className="text-glow-accent px-1">Color</Label>
+                <div className="mt-2 flex items-center gap-2">
+                    <input id="custom-color" type="color" value={color} onChange={(e) => setColor(e.target.value)} className="w-12 h-12 bg-transparent border-none rounded-md p-0 cursor-pointer" />
+                    <div className="flex-1">
+                        <div className="px-2 py-1 rounded-md bg-input w-full text-center font-mono text-sm h-12 flex items-center justify-center">
+                            {color.toUpperCase()}
+                        </div>
+                    </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Label htmlFor="custom-color" className="text-sm">Custom:</Label>
-                  <input id="custom-color" type="color" value={color} onChange={(e) => setColor(e.target.value)} className="w-full h-10 bg-transparent border-none rounded-md" />
-                </div>
-              </div>
             </div>
+
 
             <Separator className="my-4 bg-primary/20" />
 

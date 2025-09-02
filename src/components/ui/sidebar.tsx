@@ -5,15 +5,17 @@ import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { PanelLeft } from "lucide-react"
 
-import { SidebarProviderContext, SIDEBAR_COOKIE_NAME, SIDEBAR_KEYBOARD_SHORTCUT } from "@/hooks/use-sidebar"
 import { useLocalStorage } from "@/hooks/use-local-storage"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { useSidebar } from "@/hooks/use-sidebar"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 
-const SidebarProvider = React.forwardRef<
+export const SIDEBAR_COOKIE_NAME = "sidebar_state"
+export const SIDEBAR_KEYBOARD_SHORTCUT = "b"
+
+export const SidebarProvider = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<"div"> & {
     defaultOpen?: boolean
@@ -24,8 +26,6 @@ const SidebarProvider = React.forwardRef<
   (
     {
       defaultOpen = true,
-      open: openProp,
-      onOpenChange: setOpenProp,
       children,
       ...props
     },
@@ -116,6 +116,9 @@ const Sidebar = React.forwardRef<
             className="bg-card p-0 text-card-foreground [&>button]:hidden"
             side={side}
           >
+             <SheetHeader className="p-4">
+                <SheetTitle className="sr-only">Toolbar</SheetTitle>
+             </SheetHeader>
             <div className="flex h-full w-full flex-col">{children}</div>
           </SheetContent>
         </Sheet>
@@ -185,9 +188,16 @@ const SidebarInset = React.forwardRef<
 SidebarInset.displayName = "SidebarInset"
 
 
+export const SidebarProviderContext = React.createContext<{
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  isMobile: boolean;
+  toggleSidebar: () => void;
+} | null>(null);
+
+
 export {
   Sidebar,
   SidebarInset,
   SidebarTrigger,
-  SidebarProvider,
 }

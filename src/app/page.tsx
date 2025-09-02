@@ -6,30 +6,10 @@ import { useState, useRef, useCallback } from 'react';
 import { generateAnimeImage, type GenerateAnimeImageInput } from '@/ai/flows/generate-anime-image';
 import { useToast } from "@/hooks/use-toast";
 import { DrawingCanvas, type DrawingCanvasRef } from '@/components/drawing-canvas';
-import { Sidebar, SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
-import { Toolbar } from '@/components/toolbar';
-import { AIPanel } from '@/components/ai-panel';
-import { Button } from '@/components/ui/button';
-import { PanelLeft, X } from 'lucide-react';
-import { useSidebar } from '@/hooks/use-sidebar';
+import { AppLayout } from '@/components/app-layout';
 
 export type Tool = 'brush' | 'eraser';
 export type AnimeStyle = 'classic' | 'cyberpunk' | 'fantasy' | 'chibi';
-
-const MobileSidebarToggle = () => {
-  const { open, setOpen } = useSidebar();
-  return (
-    <Button 
-      variant="ghost" 
-      size="icon"
-      className="md:hidden fixed top-2 left-2 z-20 bg-card/50 backdrop-blur-sm"
-      onClick={() => setOpen(!open)}
-    >
-      {open ? <X /> : <PanelLeft />}
-    </Button>
-  );
-};
-
 
 const NeonCanvasPage: FC = () => {
   const { toast } = useToast();
@@ -108,51 +88,34 @@ const NeonCanvasPage: FC = () => {
   };
 
   return (
-    <SidebarProvider>
-      <div className="h-screen w-screen bg-background font-body text-foreground flex overflow-hidden">
-        <MobileSidebarToggle />
-        <Sidebar collapsible="icon" className="md:w-80">
-          <Toolbar
+      <AppLayout
+        tool={tool}
+        setTool={setTool}
+        color={color}
+        setColor={setColor}
+        brushSize={brushSize}
+        setBrushSize={setBrushSize}
+        opacity={opacity}
+        setOpacity={setOpacity}
+        onClear={handleClear}
+        onUndo={handleUndo}
+        onRedo={handleRedo}
+        onExport={handleExport}
+        onImport={handleImport}
+        animeStyle={animeStyle}
+        setAnimeStyle={setAnimeStyle}
+        isGenerating={isGenerating}
+        onGenerate={handleGenerate}
+        generatedImage={generatedImage}
+      >
+        <DrawingCanvas
+            ref={canvasRef}
             tool={tool}
-            setTool={setTool}
             color={color}
-            setColor={setColor}
             brushSize={brushSize}
-            setBrushSize={setBrushSize}
             opacity={opacity}
-            setOpacity={setOpacity}
-            onClear={handleClear}
-            onUndo={handleUndo}
-            onRedo={handleRedo}
-            onExport={handleExport}
-            onImport={handleImport}
-          />
-        </Sidebar>
-        
-        <SidebarInset className="flex-1 flex flex-col relative bg-black/20">
-            <header className="absolute top-2 right-2 z-10">
-                 <SidebarTrigger className="hidden md:flex" />
-            </header>
-            <main className="flex-1 relative">
-                <DrawingCanvas
-                    ref={canvasRef}
-                    tool={tool}
-                    color={color}
-                    brushSize={brushSize}
-                    opacity={opacity}
-                />
-            </main>
-        </SidebarInset>
-
-        <AIPanel
-          animeStyle={animeStyle}
-          setAnimeStyle={setAnimeStyle}
-          isGenerating={isGenerating}
-          onGenerate={handleGenerate}
-          generatedImage={generatedImage}
         />
-      </div>
-    </SidebarProvider>
+      </AppLayout>
   );
 };
 

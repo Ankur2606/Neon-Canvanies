@@ -1,12 +1,9 @@
 
-import type {Metadata} from 'next';
-import './globals.css';
-import { Toaster } from "@/components/ui/toaster"
+'use client';
 
-export const metadata: Metadata = {
-  title: 'Neon Canvas',
-  description: 'A cyberpunk-themed web drawing application',
-};
+import './globals.css';
+import { Toaster } from "@/components/ui/toaster";
+import { SidebarProvider } from '@/components/ui/sidebar';
 
 export default function RootLayout({
   children,
@@ -19,9 +16,13 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet" />
+        <title>Neon Canvas</title>
+        <meta name="description" content="A cyberpunk-themed web drawing application" />
       </head>
       <body className="font-body antialiased bg-background">
-        {children}
+        <SidebarProvider>
+          {children}
+        </SidebarProvider>
         <Toaster />
       </body>
     </html>
