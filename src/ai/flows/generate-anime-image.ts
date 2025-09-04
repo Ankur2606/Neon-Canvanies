@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -19,7 +20,7 @@ const GenerateAnimeImageInputSchema = z.object({
       'A drawing as a data URI that must include a MIME type and use Base64 encoding. Expected format: data:<mimetype>;base64,<encoded_data>.'
     ),
   animeStyle: z
-    .enum(['classic', 'cyberpunk', 'fantasy', 'chibi'])
+    .enum(['classic', 'cyberpunk', 'fantasy', 'chibi', 'realistic'])
     .describe('The desired anime style.'),
 });
 export type GenerateAnimeImageInput = z.infer<typeof GenerateAnimeImageInputSchema>;
@@ -42,6 +43,7 @@ const stylePrompts = {
     cyberpunk: "You are an expert creative artist. Your task is to analyze the provided user's drawing and identify its core subject (e.g., a person's face, a full character, an animal, an object). Then, you will generate a new, high-quality image that artistically re-imagines that subject. Transform the subject with futuristic elements. Incorporate neon lighting, cybernetic augmentations, high-tech clothing, or a dystopian city background. The result should feel gritty, advanced, and distinctly cyberpunk.",
     fantasy: "You are an expert creative artist. Your task is to analyze the provided user's drawing and identify its core subject (e.g., a person's face, a full character, an animal, an object). Then, you will generate a new, high-quality image that artistically re-imagines that subject. Re-imagine the subject in a magical or mythical setting. Add elements like glowing magical effects, medieval armor, enchanted forests, or fantasy creatures. The image should evoke a sense of wonder and adventure.",
     chibi: "You are an expert creative artist. Your task is to analyze the provided user's drawing and identify its core subject (e.g., a person's face, a full character, an animal, or an object). Then, you will generate a new, high-quality image that artistically re-imagines that subject. Redraw the subject in a 'super-deformed' chibi style: give it a large head, small body, and exaggeratedly cute features. Use playful poses, large expressive eyes, simple and clean lines, and vibrant pastel colors. The result should be charming, ultra-cute, and adorable, like a kawaii collectible sticker.",
+    realistic: "You are an expert creative artist. Your task is to analyze the provided user's drawing and identify its core subject (e.g., a person's face, a full character, an animal, an object). Then, you will generate a new, high-quality image that artistically re-imagines that subject. Render the subject with photorealistic detail. Pay close attention to realistic lighting, shadows, textures (like skin, fabric, or metal), and accurate proportions. The final image should look like a photograph of a real object or person, maintaining the composition of the original drawing."
 };
 
 const generateAnimeImageFlow = ai.defineFlow(

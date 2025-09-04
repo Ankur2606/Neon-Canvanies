@@ -23,6 +23,7 @@ const styleOptions: { value: AnimeStyle; label: string }[] = [
     { value: 'classic', label: 'Anime' },
     { value: 'fantasy', label: 'Fantasy' },
     { value: 'chibi', label: 'Chibi' },
+    { value: 'realistic', label: 'Realistic' },
 ]
 
 export const AIPanel: FC<AIPanelProps> = ({

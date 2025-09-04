@@ -11,7 +11,7 @@ import { WelcomeDialog } from '@/components/welcome-dialog';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 
 export type Tool = 'brush' | 'eraser';
-export type AnimeStyle = 'classic' | 'cyberpunk' | 'fantasy' | 'chibi';
+export type AnimeStyle = 'classic' | 'cyberpunk' | 'fantasy' | 'chibi' | 'realistic';
 
 const NeonCanvasPage: FC = () => {
   const { toast } = useToast();
