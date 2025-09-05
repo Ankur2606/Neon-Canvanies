@@ -75,7 +75,7 @@ The Akash Network is fundamental to the ethos and technical viability of Neon Ca
 
 ### Our Deployment Plan:
 
-1.  **Containerization**: We define two core services for our deployment: a `frontend` service for our Next.js application and a `triton-server` service to host our AI models.
+1.  **Containerization**: We define two core services for our deployment: a `frontend` service for our Next.js application and a `triton-server` service to host our AI models. The configuration for our AI service container is defined in the `Dockerfile` and `services/app.py` files.
 2.  **Efficient Model Serving with Triton**: Instead of running a separate container for each AI model, we use the **NVIDIA Triton Inference Server**. This is a highly efficient, production-grade solution that allows us to serve all three of our models (`sketch-to-image`, `text-to-image`, `image-editor`) from a single, powerful GPU instance. The Triton container is configured at startup to download all required models directly from Hugging Face.
 3.  **SDL Configuration**: We use a `deploy.yaml` file with Akash's Stack Definition Language (SDL) to define our entire deployment. This file specifies:
     *   The `frontend` service running our Next.js app.
