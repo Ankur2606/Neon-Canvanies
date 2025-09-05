@@ -12,7 +12,8 @@ services:
       - "PORT=80"
       - "HOST=0.0.0.0"
       # Environment variables to connect to the other agentic services
-      - "ORCHESTRATOR_URL=http://orchestrator:8080"
+      - "AKASH_CHAT_API_KEY=xxx"
+      - "HF_TOKEN=xxx"
       - "SKETCH_TO_IMAGE_URL=http://sketch-to-image:8080"
       - "TEXT_TO_IMAGE_URL=http://text-to-image:8080"
       - "IMAGE_EDITOR_URL=http://image-editor:8080"
@@ -22,35 +23,37 @@ services:
         to:
           - global: true
 
-  orchestrator:
-    image: some-docker-image/hermes4-agent:latest # Placeholder image
-    depends-on: []
-    env:
-      - "AKASH_CHAT_API_KEY=xxx"
-    expose:
-      - port: 8080
-        to:
-          - service: frontend
-
   sketch-to-image:
-    image: gokaygokay/sketch-to-image-kontext-dev-lora:latest # Placeholder image
-    depends-on: []
+    image: vllm/vllm-openai:latest
+    command: ["bash", "-c"]
+    args:
+      - "vllm serve gokaygokay/Sketch-to-Image-Kontext-Dev-LoRA"
+    env:
+      - "HF_TOKEN=xxx"
     expose:
       - port: 8080
         to:
           - service: frontend
 
   text-to-image:
-    image: lodestones/chroma:latest # Placeholder image
-    depends-on: []
+    image: vllm/vllm-openai:latest
+    command: ["bash", "-c"]
+    args:
+      - "vllm serve lodestones/Chroma"
+    env:
+      - "HF_TOKEN=xxx"
     expose:
       - port: 8080
         to:
           - service: frontend
 
   image-editor:
-    image: qwen/qwen-image-edit:latest # Placeholder image
-    depends-on: []
+    image: vllm/vllm-openai:latest
+    command: ["bash", "-c"]
+    args:
+      - "vllm serve Qwen/Qwen-Image-Edit"
+    env:
+      - "HF_TOKEN=xxx"
     expose:
       - port: 8080
         to:
@@ -62,17 +65,6 @@ profiles:
       cpu: 1
       memory: "2Gi"
       storage: "2Gi"
-    
-    orchestrator_gpu:
-      cpu: 4
-      memory: "16Gi"
-      storage: "20Gi"
-      gpu:
-        units: 1
-        attributes:
-          vendor:
-            nvidia:
-              - model: a100 # Example GPU, can be adjusted
 
     ai_models_gpu:
       cpu: 8
@@ -83,7 +75,7 @@ profiles:
         attributes:
           vendor:
             nvidia:
-              - model: rtx4090 # Example GPU, can be adjusted
+              - model: rtx4090
 
   placement:
     dcloud:
@@ -91,9 +83,6 @@ profiles:
         frontend:
           denom: uakt
           amount: 10
-        orchestrator_gpu:
-          denom: uakt
-          amount: 100
         ai_models_gpu:
           denom: uakt
           amount: 100
@@ -102,11 +91,6 @@ deployment:
   frontend:
     dcloud:
       profile: frontend
-      count: 1
-  
-  orchestrator:
-    dcloud:
-      profile: orchestrator_gpu
       count: 1
 
   sketch-to-image:
@@ -123,4 +107,3 @@ deployment:
     dcloud:
       profile: ai_models_gpu
       count: 1
-
