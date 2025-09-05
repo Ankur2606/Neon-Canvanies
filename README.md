@@ -48,21 +48,21 @@ Neon Canvanies is more than just a drawing app; it's an intelligent creative par
 +-------------------+      +-------------------------------------------------+      +--------------------------------+
 |   User Browser    |      |         Akash Network (Decentralized Cloud)     |      |   AI Model Service Containers  |
 | (Next.js Frontend)|      |                                                 |      |      (Custom Docker Image)     |
-+--------+----------+      +---------------------+---------------------------+      +---------------+----------------+
-         |                               (HTTPS) |                                                   |
-         |  1. User Draws & Selects AI Task      |                                                   |
++--------+----------+      +---------------------+---------------------------+      +--------------+-----------------+
+         |                               (HTTPS) |                                                 |
+         |  1. User Draws & Selects AI Task      |                                                 |
          +-------------------------------------> |   Frontend Service (Next.js)                    |
                                                  +---------------------+---------------------------+
                                                                        | 2. API Request
                                                                        | (to specific AI agent)
-         +-------------------------------------------------------------+----------------------------------------------+
-         |                                                             |                                              |
-         v                                                             v                                              v
-+--------+-----------------+                  +------------------------+-------------------+                  +--------+---------------+
-| Sketch-to-Image Service  |                  |  Text-to-Image Service                   |                  | Image Editing Service  |
-| (FastAPI + Diffusers)    |                  |  (FastAPI + Diffusers)                   |                  | (FastAPI + Transformers) |
-| Model: gokaygokay/...    |                  |  Model: lodestones/ChromaV2              |                  | Model: Qwen/Qwen-VL-Chat |
-+--------------------------+                  +------------------------------------------+                  +------------------------+
+         +-------------------------------------------------------------+------------------------------------------------+
+         |                                                             |                                                |
+         v                                                             v                                                v
++--------+-----------------+                  +------------------------+-------------------+                  +---------+----------------+
+| Sketch-to-Image Service  |                  |  Text-to-Image Service                   |                    | Image Editing Service    |
+| (FastAPI + Diffusers)    |                  |  (FastAPI + Diffusers)                   |                    | (FastAPI + Transformers) |
+| Model: gokaygokay/...    |                  |  Model: lodestones/ChromaV2              |                    | Model: Qwen/Qwen-VL-Chat |
++--------------------------+                  +------------------------------------------+                    +--------------------------+
 ```
 
 ---
