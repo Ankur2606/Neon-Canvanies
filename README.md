@@ -41,6 +41,9 @@ Neon Canvanies is more than just a drawing app; it's an intelligent creative par
 
 ### Architecture Diagram:
 
+<img width="512" height="279" alt="image" src="https://github.com/user-attachments/assets/09b5760c-bc68-4ae1-822a-df35b5d10a78" />
+
+
 ```
 +-------------------+      +-------------------------------------------------+      +--------------------------------+
 |   User Browser    |      |         Akash Network (Decentralized Cloud)     |      |   AI Model Service Containers  |
