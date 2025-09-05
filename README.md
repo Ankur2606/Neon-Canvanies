@@ -22,7 +22,7 @@ Neon Canvanies is more than just a drawing app; it's an intelligent creative par
 ### Key Features:
 
 *   **Intuitive Drawing Toolkit**: A fully-featured canvas with essential tools to capture your ideas, including a paintbrush, eraser, color picker, and controls for brush size and opacity. You can also import existing images to edit or export your final creations.
-*   **Agentic AI Orchestration**: At the heart of our system is an orchestrator agent powered by **Hermes 4**. This agent assists users by refining their prompts, answering questions, and autonomously delegating tasks to the appropriate specialist agent.
+*   **Agentic AI Orchestration**: At the heart of our system is an orchestrator agent powered by **Hermes 4 405B** using Akash Chat API. This agent assists users by refining their prompts, answering questions, and autonomously delegating tasks to the appropriate specialist agent.
 *   **Specialized Art Agents**:
     *   **Sketch-to-Image Agent**: Utilizes the `gokaygokay/Sketch-to-Image-Kontext-Dev-LoRA` model to interpret the user's drawing and generate a foundational image.
     *   **Text-to-Image Agent**: Employs the `lodestones/Chroma` model to create new artwork from a user's text prompt, offering unparalleled flexibility.

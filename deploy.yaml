@@ -25,6 +25,8 @@ services:
   orchestrator:
     image: some-docker-image/hermes4-agent:latest # Placeholder image
     depends-on: []
+    env:
+      - "AKASH_CHAT_API_KEY=xxx"
     expose:
       - port: 8080
         to:
@@ -121,3 +123,4 @@ deployment:
     dcloud:
       profile: ai_models_gpu
       count: 1
+
