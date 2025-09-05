@@ -1,7 +1,5 @@
-
 # 🎨 Neon Canvanies: Agentic Art Generation on the Decentralized Cloud
 
-Welcome to the technical README for Neon Canvanies. This document outlines the project's vision, architecture, and innovative use of decentralized AI infrastructure through the Akash Network.
 
 ## 1. The Problem: The Creative Bottleneck
 
@@ -23,6 +21,7 @@ Neon Canvanies is more than just a drawing app; it's an intelligent creative par
 
 ### Key Features:
 
+*   **Intuitive Drawing Toolkit**: A fully-featured canvas with essential tools to capture your ideas, including a paintbrush, eraser, color picker, and controls for brush size and opacity. You can also import existing images to edit or export your final creations.
 *   **Agentic AI Orchestration**: At the heart of our system is an orchestrator agent powered by **Hermes 4**. This agent assists users by refining their prompts, answering questions, and autonomously delegating tasks to the appropriate specialist agent.
 *   **Specialized Art Agents**:
     *   **Sketch-to-Image Agent**: Utilizes the `gokaygokay/Sketch-to-Image-Kontext-Dev-LoRA` model to interpret the user's drawing and generate a foundational image.
@@ -78,7 +77,7 @@ The Akash Network is fundamental to the ethos and technical viability of Neon Ca
 ### Why Akash?
 *   **Cost-Efficiency**: Running multiple, resource-intensive AI models can be prohibitively expensive on traditional cloud providers. Akash's decentralized marketplace for cloud compute offers significantly lower costs, making our project sustainable.
 *   **Censorship Resistance**: By deploying on a permissionless, decentralized network, we ensure that our application and the creative freedom it enables cannot be shut down or controlled by a single entity.
-*   **Flexibility & Scalability**: Akash allows us to deploy our custom Docker containers with ease. We can specify the exact hardware requirements (CPU, GPU, RAM) for each of our AI models and scale our resources up or down based on user demand.
+*   **Flexibility & Scalability**: Akash allows us to deploy our custom Docker containers with ease. We can specify the exact hardware requirements (CPU, GPU, RAM) for beach of our AI models and accordingly big then scale our resources up or down based on user demand.
 
 ### Our Deployment Plan:
 
