@@ -25,7 +25,7 @@ Neon Canvanies is more than just a drawing app; it's an intelligent creative par
 *   **Specialized Art Agents**:
     *   **Sketch-to-Image Agent**: Utilizes the `gokaygokay/Sketch-to-Image-Kontext-Dev-LoRA` model to interpret the user's drawing and generate a foundational image.
     *   **Text-to-Image Agent**: Employs the `lodestones/ChromaV2` model to create new artwork from a user's text prompt, offering unparalleled flexibility.
-    *   **Image Editing Agent**: Leverages `Qwen/Qwen-VL-Chat` to apply stylistic transformations or user-defined edits to an existing image on the canvas.
+    *   **Image Editing Agent**: Leverages `Qwen/Qwen-Image-Edit` to apply stylistic transformations or user-defined edits to an existing image on the canvas.
 *   **Flexible User Control**: Users can either select from curated styles (Cyberpunk, Anime, etc.) or provide their own detailed prompts, giving them full control over the creative process.
 
 ### User Onboarding Flow:
