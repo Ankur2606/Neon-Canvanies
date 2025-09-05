@@ -1,75 +1,97 @@
-version: '2.0'
+version: "2.0"
 
 services:
   frontend:
     image: node:20
     command:
-      - npm
-      - run
-      - start
+      - "bash"
+      - "-c"
+      - |
+        npm install && npm run start
     env:
-      - PORT=80
-      - HOST=0.0.0.0
-      # Environment variables to connect to the other agentic services
-      - SKETCH_TO_IMAGE_URL=http://sketch-to-image:8080
-      - TEXT_TO_IMAGE_URL=http://text-to-image:8080
-      - IMAGE_EDITOR_URL=http://image-editor:8080
+      - "PORT=80"
+      - "HOST=0.0.0.0"
+      # Environment variables to connect to the Triton server endpoints
+      - "AKASH_CHAT_API_KEY=xxx"
+      - "HF_TOKEN=xxx"
+      - "SKETCH_TO_IMAGE_URL=http://triton-server:8000/v2/models/sketch-to-image/infer"
+      - "TEXT_TO_IMAGE_URL=http://triton-server:8000/v2/models/text-to-image/infer"
+      - "IMAGE_EDITOR_URL=http://triton-server:8000/v2/models/image-editor/infer"
     expose:
       - port: 80
         as: 80
         to:
           - global: true
 
-  sketch-to-image:
-    image: YOUR_DOCKERHUB_USERNAME/neon-canvanies-service:latest
+  triton-server:
+    image: nvcr.io/nvidia/tritonserver:24.04-py3
+    command:
+      - "bash"
+      - "-c"
+      - |
+        apt-get update && apt-get install -y git git-lfs python3-pip && \
+        pip install huggingface_hub && \
+        mkdir -p /models/sketch-to-image && \
+        mkdir -p /models/text-to-image && \
+        mkdir -p /models/image-editor && \
+        HF_TOKEN=${HF_TOKEN} huggingface-cli download gokaygokay/Sketch-to-Image-Kontext-Dev-LoRA --local-dir /models/sketch-to-image && \
+        HF_TOKEN=${HF_TOKEN} huggingface-cli download lodestones/Chroma --local-dir /models/text-to-image && \
+        HF_TOKEN=${HF_TOKEN} huggingface-cli download Qwen/Qwen-Image-Edit --local-dir /models/image-editor && \
+        tritonserver --model-repository=/models --strict-model-config=false --log-verbose=1
     env:
-      - HF_TOKEN=xxx
-      - MODEL_ID=gokaygokay/Sketch-to-Image-Kontext-Dev-LoRA
-    command: ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8080"]
+      - "NVIDIA_DISABLE_REQUIRE=1"
+      - "HF_TOKEN=xxx"
     expose:
-      - port: 8080
+      - port: 8000
+        as: 8000
         to:
           - service: frontend
-
-  text-to-image:
-    image: YOUR_DOCKERHUB_USERNAME/neon-canvanies-service:latest
-    env:
-      - HF_TOKEN=xxx
-      - MODEL_ID=lodestones/ChromaV2
-    command: ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8080"]
-    expose:
-      - port: 8080
+          - global: true
+      - port: 8001
+        as: 8001
         to:
           - service: frontend
-
-  image-editor:
-    image: YOUR_DOCKERHUB_USERNAME/neon-canvanies-service:latest
-    env:
-      - HF_TOKEN=xxx
-      - MODEL_ID=Qwen/Qwen-VL-Chat
-    command: ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8080"]
-    expose:
-      - port: 8080
+      - port: 8002
+        as: 8002
         to:
-          - service: frontend
+          - global: true
 
 profiles:
   compute:
     frontend:
       cpu: 1
-      memory: '2Gi'
-      storage: '2Gi'
+      memory: "2Gi"
+      storage: "2Gi"
 
     ai_models_gpu:
-      cpu: 8
-      memory: '40Gi'
-      storage: '50Gi'
-      gpu:
-        units: 1
-        attributes:
-          vendor:
-            nvidia:
-              - model: a100
+      resources:
+        cpu:
+          units: 12
+        memory:
+          size: 64Gi
+        storage:
+          - size: 10Gi
+            name: os
+            attributes:
+              persistent: true
+              class: beta3 # NVMe
+          - size: 200Gi
+            name: data
+            attributes:
+              persistent: true
+              class: beta3 # NVMe
+          - size: 10Gi
+            name: shm
+            attributes:
+              persistent: false
+              class: ram
+        gpu:
+          units: 1
+          attributes:
+            vendor:
+              nvidia:
+                - model: a100
+
 
   placement:
     dcloud:
@@ -86,15 +108,8 @@ deployment:
     dcloud:
       profile: frontend
       count: 1
-  sketch-to-image:
-    dcloud:
-      profile: ai_models_gpu
-      count: 1
-  text-to-image:
-    dcloud:
-      profile: ai_models_gpu
-      count: 1
-  image-editor:
+
+  triton-server:
     dcloud:
       profile: ai_models_gpu
       count: 1
