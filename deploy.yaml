@@ -1,0 +1,123 @@
+
+version: "2.0"
+
+services:
+  frontend:
+    image: node:20
+    command:
+      - "npm"
+      - "run"
+      - "start"
+    env:
+      - "PORT=80"
+      - "HOST=0.0.0.0"
+      # Environment variables to connect to the other agentic services
+      - "ORCHESTRATOR_URL=http://orchestrator:8080"
+      - "SKETCH_TO_IMAGE_URL=http://sketch-to-image:8080"
+      - "TEXT_TO_IMAGE_URL=http://text-to-image:8080"
+      - "IMAGE_EDITOR_URL=http://image-editor:8080"
+    expose:
+      - port: 80
+        as: 80
+        to:
+          - global: true
+
+  orchestrator:
+    image: some-docker-image/hermes4-agent:latest # Placeholder image
+    depends-on: []
+    expose:
+      - port: 8080
+        to:
+          - service: frontend
+
+  sketch-to-image:
+    image: gokaygokay/sketch-to-image-kontext-dev-lora:latest # Placeholder image
+    depends-on: []
+    expose:
+      - port: 8080
+        to:
+          - service: frontend
+
+  text-to-image:
+    image: lodestones/chroma:latest # Placeholder image
+    depends-on: []
+    expose:
+      - port: 8080
+        to:
+          - service: frontend
+
+  image-editor:
+    image: qwen/qwen-image-edit:latest # Placeholder image
+    depends-on: []
+    expose:
+      - port: 8080
+        to:
+          - service: frontend
+
+profiles:
+  compute:
+    frontend:
+      cpu: 1
+      memory: "2Gi"
+      storage: "2Gi"
+    
+    orchestrator_gpu:
+      cpu: 4
+      memory: "16Gi"
+      storage: "20Gi"
+      gpu:
+        units: 1
+        attributes:
+          vendor:
+            nvidia:
+              - model: a100 # Example GPU, can be adjusted
+
+    ai_models_gpu:
+      cpu: 8
+      memory: "32Gi"
+      storage: "50Gi"
+      gpu:
+        units: 1
+        attributes:
+          vendor:
+            nvidia:
+              - model: rtx4090 # Example GPU, can be adjusted
+
+  placement:
+    dcloud:
+      pricing:
+        frontend:
+          denom: uakt
+          amount: 10
+        orchestrator_gpu:
+          denom: uakt
+          amount: 100
+        ai_models_gpu:
+          denom: uakt
+          amount: 100
+
+deployment:
+  frontend:
+    dcloud:
+      profile: frontend
+      count: 1
+  
+  orchestrator:
+    dcloud:
+      profile: orchestrator_gpu
+      count: 1
+
+  sketch-to-image:
+    dcloud:
+      profile: ai_models_gpu
+      count: 1
+
+  text-to-image:
+    dcloud:
+      profile: ai_models_gpu
+      count: 1
+
+  image-editor:
+    dcloud:
+      profile: ai_models_gpu
+      count: 1
