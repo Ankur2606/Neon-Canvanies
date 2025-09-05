@@ -55,14 +55,14 @@ Neon Canvanies is more than just a drawing app; it's an intelligent creative par
                                                  +---------------------+---------------------------+
                                                                        | 2. API Request
                                                                        | (to specific AI agent)
-         +-------------------------------------------------------------+------------------------------------------------+
-         |                                                             |                                                |
-         v                                                             v                                                v
-+--------+-----------------+                  +------------------------+-----------------+                    +---------+----------------+
-| Sketch-to-Image Service  |                  |  Text-to-Image Service                   |                    | Image Editing Service    |
-| (FastAPI + Diffusers)    |                  |  (FastAPI + Diffusers)                   |                    | (FastAPI + Transformers) |
-| Model: gokaygokay/...    |                  |  Model: lodestones/ChromaV2              |                    | Model: Qwen/Qwen-VL-Chat |
-+--------------------------+                  +------------------------------------------+                    +--------------------------+
+         +-------------------------------------------------------------+-----------------------------------------------------+
+         |                                                             |                                                     |
+         v                                                             v                                                     v
++--------+-----------------+                  +------------------------+-----------------+                    +--------------+--------------+
+| Sketch-to-Image Service  |                  |  Text-to-Image Service                   |                    | Image Editing Service       |
+| (FastAPI + Diffusers)    |                  |  (FastAPI + Diffusers)                   |                    | (FastAPI + Transformers)    |
+| Model: gokaygokay/...    |                  |  Model: lodestones/ChromaV2              |                    | Model: Qwen/Qwen-Image-Chat |
++--------------------------+                  +------------------------------------------+                    +-----------------------------+
 ```
 
 ---
