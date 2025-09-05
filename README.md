@@ -1,4 +1,4 @@
-# 🎨 Neon Canvanies: Agentic Art Generation on the Decentralized Cloud
+# 🎨 Prototype for Neon Canvanies: Agentic Art Generation on the Decentralized Cloud 
 
 ## 1. The Problem: The Creative Bottleneck
 
