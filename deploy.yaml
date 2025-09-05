@@ -1,22 +1,19 @@
-
-version: "2.0"
+version: '2.0'
 
 services:
   frontend:
     image: node:20
     command:
-      - "npm"
-      - "run"
-      - "start"
+      - npm
+      - run
+      - start
     env:
-      - "PORT=80"
-      - "HOST=0.0.0.0"
+      - PORT=80
+      - HOST=0.0.0.0
       # Environment variables to connect to the other agentic services
-      - "AKASH_CHAT_API_KEY=xxx"
-      - "HF_TOKEN=xxx"
-      - "SKETCH_TO_IMAGE_URL=http://sketch-to-image:8080"
-      - "TEXT_TO_IMAGE_URL=http://text-to-image:8080"
-      - "IMAGE_EDITOR_URL=http://image-editor:8080"
+      - SKETCH_TO_IMAGE_URL=http://sketch-to-image:8080
+      - TEXT_TO_IMAGE_URL=http://text-to-image:8080
+      - IMAGE_EDITOR_URL=http://image-editor:8080
     expose:
       - port: 80
         as: 80
@@ -24,36 +21,30 @@ services:
           - global: true
 
   sketch-to-image:
-    image: vllm/vllm-openai:latest
-    command: ["bash", "-c"]
-    args:
-      - "vllm serve gokaygokay/Sketch-to-Image-Kontext-Dev-LoRA"
+    image: YOUR_DOCKERHUB_USERNAME/neon-canvanies-service:latest
     env:
-      - "HF_TOKEN=xxx"
+      - HF_TOKEN=xxx
+      - MODEL_ID=gokaygokay/Sketch-to-Image-Kontext-Dev-LoRA
     expose:
       - port: 8080
         to:
           - service: frontend
 
   text-to-image:
-    image: vllm/vllm-openai:latest
-    command: ["bash", "-c"]
-    args:
-      - "vllm serve lodestones/Chroma"
+    image: YOUR_DOCKERHUB_USERNAME/neon-canvanies-service:latest
     env:
-      - "HF_TOKEN=xxx"
+      - HF_TOKEN=xxx
+      - MODEL_ID=lodestones/ChromaV2
     expose:
       - port: 8080
         to:
           - service: frontend
 
   image-editor:
-    image: vllm/vllm-openai:latest
-    command: ["bash", "-c"]
-    args:
-      - "vllm serve Qwen/Qwen-Image-Edit"
+    image: YOUR_DOCKERHUB_USERNAME/neon-canvanies-service:latest
     env:
-      - "HF_TOKEN=xxx"
+      - HF_TOKEN=xxx
+      - MODEL_ID=Qwen/Qwen-VL-Chat
     expose:
       - port: 8080
         to:
@@ -63,20 +54,19 @@ profiles:
   compute:
     frontend:
       cpu: 1
-      memory: "2Gi"
-      storage: "2Gi"
+      memory: '2Gi'
+      storage: '2Gi'
 
     ai_models_gpu:
       cpu: 8
-      memory: "32Gi"
-      storage: "50Gi"
+      memory: '40Gi'
+      storage: '50Gi'
       gpu:
         units: 1
         attributes:
           vendor:
             nvidia:
-              - model: rtx4090
-
+              - model: a100
   placement:
     dcloud:
       pricing:
@@ -85,24 +75,21 @@ profiles:
           amount: 10
         ai_models_gpu:
           denom: uakt
-          amount: 100
+          amount: 10000
 
 deployment:
   frontend:
     dcloud:
       profile: frontend
       count: 1
-
   sketch-to-image:
     dcloud:
       profile: ai_models_gpu
       count: 1
-
   text-to-image:
     dcloud:
       profile: ai_models_gpu
       count: 1
-
   image-editor:
     dcloud:
       profile: ai_models_gpu
