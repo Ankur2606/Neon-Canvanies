@@ -75,12 +75,13 @@ The Akash Network is fundamental to the ethos and technical viability of Neon Ca
 
 ### Our Deployment Plan:
 
-1.  **Containerization**: Each AI model is served by a standardized FastAPI application, which is packaged into a single, reusable Docker image. This image is built to be configurable at runtime via environment variables.
-2.  **SDL Configuration**: We use a `deploy.yaml` file with Akash's Stack Definition Language (SDL) to define our deployment. This file specifies:
+1.  **Containerization**: We define two core services for our deployment: a `frontend` service for our Next.js application and a `triton-server` service to host our AI models.
+2.  **Efficient Model Serving with Triton**: Instead of running a separate container for each AI model, we use the **NVIDIA Triton Inference Server**. This is a highly efficient, production-grade solution that allows us to serve all three of our models (`sketch-to-image`, `text-to-image`, `image-editor`) from a single, powerful GPU instance. The Triton container is configured at startup to download all required models directly from Hugging Face.
+3.  **SDL Configuration**: We use a `deploy.yaml` file with Akash's Stack Definition Language (SDL) to define our entire deployment. This file specifies:
     *   The `frontend` service running our Next.js app.
-    *   Multiple AI services (`text-to-image`, `image-editor`, etc.), each using the same custom Docker image but configured with a different `MODEL_ID` environment variable.
-    *   Resource requirements for each service, including powerful GPU instances for the AI models.
-    *   Secure networking rules, exposing only the frontend to the public internet while allowing it to communicate with the backend AI services.
-3.  **Decentralized Deployment**: We will deploy our SDL file to the Akash marketplace, which will automatically match our application with providers on the network who meet our specified requirements. This ensures our application is running on a globally distributed and resilient infrastructure.
+    *   The `triton-server` service, which uses a standard NVIDIA container image. Its startup `command` handles the setup and downloads all the necessary models.
+    *   **Resource Requirements**: The SDL defines compute profiles, including a powerful `ai_models_gpu` profile that requests a high-performance NVIDIA A100 GPU, along with sufficient CPU, RAM, and storage to handle all models.
+    *   **Secure Networking**: The `frontend` is exposed globally so users can access the app. The `triton-server` is only exposed internally to the `frontend` service, ensuring secure and direct communication between the application and the AI models without exposing the model server to the public internet.
+4.  **Decentralized Deployment**: By submitting our `deploy.yaml` to the Akash marketplace, we find a provider on the decentralized network that meets our specific hardware and pricing requirements. This ensures our application runs on a globally distributed and resilient infrastructure.
 
-By building on Akash, we are not only creating an innovative tool but also contributing to the vision of a more open, free, and decentralized internet.
+By building on Akash and using professional-grade tools like Triton, we are not only creating an innovative application but also demonstrating a viable, cost-effective path for deploying complex AI workloads on the decentralized cloud.
