@@ -14,24 +14,11 @@ services:
       - SKETCH_TO_IMAGE_URL=http://sketch-to-image:8080
       - TEXT_TO_IMAGE_URL=http://text-to-image:8080
       - IMAGE_EDITOR_URL=http://image-editor:8080
-      - ORCHESTRATOR_URL=http://orchestrator:8080
     expose:
       - port: 80
         as: 80
         to:
           - global: true
-
-  orchestrator:
-    image: YOUR_DOCKERHUB_USERNAME/neon-canvanies-service:latest
-    env:
-      - HF_TOKEN=xxx
-      - AKASH_CHAT_API_KEY=xxx
-      - MODEL_ID=Hermes-4-405B-FP8
-    command: ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8080"]
-    expose:
-      - port: 8080
-        to:
-          - service: frontend
 
   sketch-to-image:
     image: YOUR_DOCKERHUB_USERNAME/neon-canvanies-service:latest
@@ -98,10 +85,6 @@ deployment:
   frontend:
     dcloud:
       profile: frontend
-      count: 1
-  orchestrator:
-    dcloud:
-      profile: ai_models_gpu
       count: 1
   sketch-to-image:
     dcloud:
