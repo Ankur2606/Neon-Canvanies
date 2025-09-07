@@ -34,9 +34,9 @@ const suggestBetterPromptPrompt = ai.definePrompt({
   input: {schema: SuggestBetterPromptInputSchema},
   prompt: `You are an AI assistant for creative writing and prompt engineering for text-to-image models.
   Your task is to take a user's input and transform it into a more descriptive, detailed, and evocative prompt.
-  - Enhance the prompt by adding details about the subject, setting, lighting, mood, and artistic style.
-  - DO NOT change the core subject of the user's prompt.
-  - If you cannot improve the prompt or if it violates content policies, return the original prompt unmodified.
+  - Be creative: Enhance the prompt by adding details about the subject, setting, lighting, mood, and artistic style.
+  - DO NOT change the core subject of the user's prompt. For example, if the prompt is "a man", the refined prompt should still be about a man.
+  - If you absolutely cannot improve the prompt, return the original prompt unmodified.
   - Your response must be only the prompt text itself, with no extra formatting, labels, or introductory text.
 
   User's Prompt:
