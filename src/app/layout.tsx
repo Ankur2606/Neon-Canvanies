@@ -20,10 +20,10 @@ export default function RootLayout({
         <meta name="description" content="A cyberpunk-themed web drawing application" />
       </head>
       <body className="font-body antialiased bg-background">
-        <SidebarProvider>
-          {children}
-        </SidebarProvider>
-        <Toaster />
+          <SidebarProvider>
+            {children}
+          </SidebarProvider>
+          <Toaster />
       </body>
     </html>
   );
