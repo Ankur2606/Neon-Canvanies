@@ -4,6 +4,7 @@
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { SidebarProvider } from '@/components/ui/sidebar';
+import { ThirdwebProvider } from 'thirdweb/react';
 
 export default function RootLayout({
   children,
@@ -20,10 +21,12 @@ export default function RootLayout({
         <meta name="description" content="A cyberpunk-themed web drawing application" />
       </head>
       <body className="font-body antialiased bg-background">
+        <ThirdwebProvider>
           <SidebarProvider>
             {children}
           </SidebarProvider>
           <Toaster />
+        </ThirdwebProvider>
       </body>
     </html>
   );

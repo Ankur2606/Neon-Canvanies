@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { useSidebar } from '@/hooks/use-sidebar';
 import { PanelLeft, X } from 'lucide-react';
+import { WalletConnector } from './wallet-connector';
 
 const MobileSidebarToggle = () => {
   const { open, setOpen } = useSidebar();
@@ -27,6 +28,7 @@ export const Header = ({ children }: { children?: React.ReactNode }) => {
             <div className="hidden md:block">
                 <SidebarTrigger />
             </div>
+            <WalletConnector />
             {children}
         </header>
     )
