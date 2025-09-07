@@ -7,7 +7,7 @@ import { Sidebar, SidebarInset } from '@/components/ui/sidebar';
 import { Toolbar } from '@/components/toolbar';
 import { AIPanel } from '@/components/ai-panel';
 import { Header } from '@/components/header';
-import type { Tool, AnimeStyle } from '@/app/page';
+import type { Tool, AnimeStyle, GenerationMode } from '@/app/page';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Button } from './ui/button';
@@ -33,6 +33,10 @@ interface AppLayoutProps {
   isGenerating: boolean;
   onGenerate: () => void;
   generatedImage: string | null;
+  generationMode: GenerationMode;
+  setGenerationMode: Dispatch<SetStateAction<GenerationMode>>;
+  customPrompt: string;
+  setCustomPrompt: Dispatch<SetStateAction<string>>;
 }
 
 const MobileAIPanelDialog = ({ children }: { children: ReactNode }) => {
@@ -78,8 +82,24 @@ export const AppLayout: FC<AppLayoutProps> = ({
   isGenerating,
   onGenerate,
   generatedImage,
+  generationMode,
+  setGenerationMode,
+  customPrompt,
+  setCustomPrompt
 }) => {
   const isMobile = useIsMobile();
+
+  const aiPanelProps = {
+    animeStyle,
+    setAnimeStyle,
+    isGenerating,
+    onGenerate,
+    generatedImage,
+    generationMode,
+    setGenerationMode,
+    customPrompt,
+    setCustomPrompt,
+  }
 
   return (
     <div className="h-screen w-screen bg-background font-body text-foreground flex overflow-hidden">
@@ -105,13 +125,7 @@ export const AppLayout: FC<AppLayoutProps> = ({
           <Header>
             {isMobile && (
               <MobileAIPanelDialog>
-                  <AIPanel
-                    animeStyle={animeStyle}
-                    setAnimeStyle={setAnimeStyle}
-                    isGenerating={isGenerating}
-                    onGenerate={onGenerate}
-                    generatedImage={generatedImage}
-                  />
+                  <AIPanel {...aiPanelProps} />
               </MobileAIPanelDialog>
             )}
           </Header>
@@ -121,13 +135,7 @@ export const AppLayout: FC<AppLayoutProps> = ({
       </SidebarInset>
 
       <div className="hidden md:flex">
-        <AIPanel
-          animeStyle={animeStyle}
-          setAnimeStyle={setAnimeStyle}
-          isGenerating={isGenerating}
-          onGenerate={onGenerate}
-          generatedImage={generatedImage}
-        />
+        <AIPanel {...aiPanelProps}/>
       </div>
     </div>
   );

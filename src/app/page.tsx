@@ -2,7 +2,7 @@
 'use client';
 
 import type { FC } from 'react';
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { generateAnimeImage, type GenerateAnimeImageInput } from '@/ai/flows/generate-anime-image';
 import { useToast } from "@/hooks/use-toast";
 import { DrawingCanvas, type DrawingCanvasRef } from '@/components/drawing-canvas';
@@ -12,6 +12,7 @@ import { useLocalStorage } from '@/hooks/use-local-storage';
 
 export type Tool = 'brush' | 'eraser';
 export type AnimeStyle = 'classic' | 'cyberpunk' | 'fantasy' | 'chibi' | 'realistic';
+export type GenerationMode = 'style' | 'prompt';
 
 const NeonCanvasPage: FC = () => {
   const { toast } = useToast();
@@ -20,6 +21,8 @@ const NeonCanvasPage: FC = () => {
   const [brushSize, setBrushSize] = useState<number>(10);
   const [opacity, setOpacity] = useState<number>(1);
   const [animeStyle, setAnimeStyle] = useState<AnimeStyle>('cyberpunk');
+  const [customPrompt, setCustomPrompt] = useState<string>('');
+  const [generationMode, setGenerationMode] = useState<GenerationMode>('style');
 
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
@@ -72,11 +75,24 @@ const NeonCanvasPage: FC = () => {
       });
       return;
     }
+
+    if (generationMode === 'prompt' && !customPrompt.trim()) {
+      toast({
+        variant: 'destructive',
+        title: 'Prompt is empty',
+        description: 'Please enter a prompt for the Dream-Mode generation.',
+      });
+      return;
+    }
     
     setIsGenerating(true);
     setGeneratedImage(null);
     try {
-      const input: GenerateAnimeImageInput = { drawingDataUri, animeStyle };
+      const input: GenerateAnimeImageInput = { 
+        drawingDataUri, 
+        animeStyle, 
+        customPrompt: generationMode === 'prompt' ? customPrompt : undefined,
+      };
       const result = await generateAnimeImage(input);
       if (!result?.animeImageDataUri) {
           throw new Error('The AI did not return an image. This might be due to a content policy violation or a temporary issue. Please try again with a different drawing.');
@@ -117,6 +133,10 @@ const NeonCanvasPage: FC = () => {
         isGenerating={isGenerating}
         onGenerate={handleGenerate}
         generatedImage={generatedImage}
+        generationMode={generationMode}
+        setGenerationMode={setGenerationMode}
+        customPrompt={customPrompt}
+        setCustomPrompt={setCustomPrompt}
       >
         <DrawingCanvas
             ref={canvasRef}

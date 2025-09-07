@@ -11,7 +11,6 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import wav from 'wav';
 
 const GenerateAnimeImageInputSchema = z.object({
   drawingDataUri: z
@@ -22,6 +21,7 @@ const GenerateAnimeImageInputSchema = z.object({
   animeStyle: z
     .enum(['classic', 'cyberpunk', 'fantasy', 'chibi', 'realistic'])
     .describe('The desired anime style.'),
+  customPrompt: z.string().optional().describe('A custom user-provided prompt to guide image generation.'),
 });
 export type GenerateAnimeImageInput = z.infer<typeof GenerateAnimeImageInputSchema>;
 
@@ -53,7 +53,8 @@ const generateAnimeImageFlow = ai.defineFlow(
     outputSchema: GenerateAnimeImageOutputSchema,
   },
   async input => {
-    const selectedPrompt = stylePrompts[input.animeStyle];
+    // If a custom prompt is provided, use it. Otherwise, use the selected style prompt.
+    const selectedPrompt = input.customPrompt || stylePrompts[input.animeStyle];
 
     const {media} = await ai.generate({
       model: 'googleai/gemini-2.0-flash-preview-image-generation',
