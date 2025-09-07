@@ -30,7 +30,7 @@ export async function suggestBetterPrompt(
 const prompt = ai.definePrompt({
   name: 'suggestBetterPromptPrompt',
   input: {schema: SuggestBetterPromptInputSchema},
-  output: {schema: SuggestBetterPromptOutputSchema},
+  output: {schema: SuggestBetterPromptOutputSchema.nullable()},
   prompt: `You are an AI assistant that excels at creative writing and prompt engineering for text-to-image models. Your task is to take a user's input and transform it into a more descriptive, detailed, and evocative prompt that will result in a higher-quality and more artistic image.
 
   Focus on adding details about the subject, setting, lighting, mood, and artistic style. Do not change the core subject of the user's prompt, but enhance it.
