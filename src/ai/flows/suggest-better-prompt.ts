@@ -50,6 +50,9 @@ const suggestBetterPromptFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await prompt(input);
-    return output!;
+    if (!output) {
+      throw new Error('The AI was unable to refine the prompt. This may be due to a content policy or temporary issue.');
+    }
+    return output;
   }
 );
