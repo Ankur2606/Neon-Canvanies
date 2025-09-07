@@ -1,0 +1,40 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "C:\\Users\\bindu\\Desktop\\codeG\\Neon-Canvanies\\contracts\\contracts\\BdagCredit.sol": {
+      "lastModificationDate": 1757278693299,
+      "contentHash": "73465087a04a8b9481edd70c839b7cf2",
+      "sourceName": "contracts/BdagCredit.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.19"
+      ],
+      "artifacts": [
+        "BdagCredit"
+      ]
+    }
+  }
+}
