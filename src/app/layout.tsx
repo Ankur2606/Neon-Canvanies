@@ -5,6 +5,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { ThirdwebProvider } from 'thirdweb/react';
+import { CreditsProvider } from '@/context/credits-context';
 
 export default function RootLayout({
   children,
@@ -22,10 +23,12 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased bg-background">
         <ThirdwebProvider>
-          <SidebarProvider>
-            {children}
-          </SidebarProvider>
-          <Toaster />
+          <CreditsProvider>
+            <SidebarProvider>
+              {children}
+            </SidebarProvider>
+            <Toaster />
+          </CreditsProvider>
         </ThirdwebProvider>
       </body>
     </html>

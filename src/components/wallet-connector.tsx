@@ -15,9 +15,10 @@ import { client } from "@/lib/thirdweb";
 import { bdagTestnet } from '@/lib/chains';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from './ui/button';
-import { Loader2, Check, Power, Eye, EyeOff } from 'lucide-react';
+import { Loader2, Check, Power, Eye, EyeOff, Diamond } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
+import { useCredits } from '@/context/credits-context';
 
 const ConnectButton = ({isConnecting, onConnect}: {isConnecting: boolean, onConnect: () => void}) => (
     <Button 
@@ -33,6 +34,8 @@ const ConnectButton = ({isConnecting, onConnect}: {isConnecting: boolean, onConn
 const ConnectedDisplay = ({ onDisconnect }: { onDisconnect: () => void }) => {
   const account = useActiveAccount();
   const [showBalance, setShowBalance] = useState(false);
+  const { credits } = useCredits();
+
   const { data: balance } = useWalletBalance({
     client,
     chain: bdagTestnet,
@@ -43,17 +46,26 @@ const ConnectedDisplay = ({ onDisconnect }: { onDisconnect: () => void }) => {
 
   return (
       <div className="flex w-full items-center gap-2 rounded-md border border-primary/20 bg-card/80 p-2 text-sm">
-         <Check className="text-green-500"/>
-         <div className="flex flex-col flex-1">
-            <span className="font-mono text-xs md:text-sm break-all">{account.address}</span>
-            <span className="text-xs text-muted-foreground">BlockDAG Testnet</span>
-            {showBalance && balance && (
-              <span className="text-xs font-mono">{parseFloat(balance.displayValue).toFixed(4)} {balance.symbol}</span>
-            )}
+         <div className="flex flex-col flex-1 gap-1">
+            <span className="font-mono text-xs md:text-sm break-all flex items-center gap-2">
+              <Check className="text-green-500 size-4 shrink-0"/> {account.address}
+            </span>
+            <div className="text-xs text-muted-foreground flex items-center justify-between gap-4 pl-6">
+              <span>BlockDAG Testnet</span>
+              <div className="flex items-center gap-4">
+                {balance && (
+                  <span className="font-mono flex items-center gap-1.5">
+                    <svg className="w-3 h-3 text-yellow-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5l4.243 4.243-2.122 2.121-2.12-2.12-2.122 2.12-2.121-2.121L12 .5zm7.778 6.061l-2.12 2.121 2.12 2.122 2.122-2.121-2.121-2.122zM4.222 6.561L2.1 8.682l2.122 2.121 2.12-2.12-2.12-2.122zm7.778 2.121L7.757 12l4.243 4.243L16.243 12l-4.243-3.318zM12 14.121l-2.12-2.121-2.122 2.12 4.242 4.243 4.243-4.242-2.121-2.12-2.121 2.121z"></path></svg>
+                    {parseFloat(balance.displayValue).toFixed(4)} {balance.symbol}
+                  </span>
+                )}
+                 <span className="font-mono flex items-center gap-1.5">
+                    <Diamond className="size-3 text-cyan-400"/>
+                    {credits} Credits
+                  </span>
+              </div>
+            </div>
          </div>
-         <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0" onClick={() => setShowBalance(p => !p)}>
-           {showBalance ? <EyeOff /> : <Eye />}
-         </Button>
          <Button variant="destructive" size="icon" onClick={onDisconnect} title="Disconnect Wallet" className="h-8 w-8 shrink-0">
               <Power />
           </Button>
@@ -67,33 +79,46 @@ export const WalletConnector = () => {
   const account = useActiveAccount();
   const wallet = useActiveWallet();
   const switchChain = useSwitchActiveWalletChain();
+  const { syncCreditsFromWallet } = useCredits();
+
   const [isConnecting, setIsConnecting] = useState(false);
   const { toast } = useToast();
   const isMobile = useIsMobile();
   const [isMobileDialogOpen, setMobileDialogOpen] = useState(false);
+
+  useEffect(() => {
+    syncCreditsFromWallet();
+  }, [account, syncCreditsFromWallet]);
 
   const handleConnect = async () => {
     setIsConnecting(true);
     try {
       const metamaskWallet = createWallet("io.metamask");
       
-      await connect(async () => {
+      const connectedWallet = await connect(async () => {
         await metamaskWallet.connect({ client });
-        try {
-            if (wallet && wallet.getChain()?.id !== bdagTestnet.id) {
-                await switchChain(bdagTestnet);
-            }
-            toast({ title: 'Connected!', description: 'Switched to BlockDAG Testnet.' });
-            if (isMobile) setMobileDialogOpen(false);
-        } catch (switchError) {
-            console.error("Failed to switch to BDAG network:", switchError);
-            toast({ variant: 'destructive', title: 'Network Switch Failed', description: 'Could not switch to BlockDAG Testnet automatically.' });
+        if (metamaskWallet.getChain()?.id !== bdagTestnet.id) {
+          await metamaskWallet.switchChain(bdagTestnet);
         }
         return metamaskWallet;
       });
+
+      if (connectedWallet) {
+        toast({ title: 'Connected!', description: 'Wallet connected to BlockDAG Testnet.' });
+        if (isMobile) setMobileDialogOpen(false);
+      }
+      
     } catch (error) {
       console.error("Failed to connect wallet:", error);
-      toast({ variant: 'destructive', title: 'Connection Failed', description: error instanceof Error ? error.message : 'An unknown error occurred.' });
+      let description = 'An unknown error occurred.';
+      if (error instanceof Error) {
+        if (error.message.includes('switch chain')) {
+          description = 'Could not switch to BlockDAG Testnet automatically. Please do it manually in MetaMask.'
+        } else {
+          description = error.message;
+        }
+      }
+      toast({ variant: 'destructive', title: 'Connection Failed', description });
     } finally {
       setIsConnecting(false);
     }
