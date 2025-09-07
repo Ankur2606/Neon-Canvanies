@@ -23,13 +23,22 @@ const MobileSidebarToggle = () => {
 
 export const Header = ({ children }: { children?: React.ReactNode }) => {
     return (
-        <header className="absolute top-2 left-2 z-20 flex items-center gap-2">
-            <MobileSidebarToggle />
-            <div className="hidden md:block">
-                <SidebarTrigger />
+        <header className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between p-2">
+            <div className="flex items-center gap-2">
+                <MobileSidebarToggle />
+                <div className="hidden md:block">
+                    <SidebarTrigger />
+                </div>
+                <div className="hidden md:block">
+                    <WalletConnector />
+                </div>
             </div>
-            <WalletConnector />
-            {children}
+            <div className="flex items-center gap-2">
+                {children}
+                <div className="md:hidden">
+                    <WalletConnector />
+                </div>
+            </div>
         </header>
     )
 }
