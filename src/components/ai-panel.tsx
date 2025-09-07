@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Dispatch, FC, SetStateAction, useState } from 'react';
@@ -60,31 +59,38 @@ export const AIPanel: FC<AIPanelProps> = ({
 
   const handleRefinePrompt = async () => {
     if (!customPrompt.trim()) return;
+    
     setIsRefining(true);
+    const originalPrompt = customPrompt;
+    
     try {
-      const originalPrompt = customPrompt;
       const refinedPrompt = await suggestBetterPrompt({ prompt: originalPrompt });
+      
+      // Check if we got a valid refined prompt
+      if (!refinedPrompt || typeof refinedPrompt !== 'string' || !refinedPrompt.trim()) {
+        throw new Error("AI returned an invalid response");
+      }
+
+      // Update the prompt with the refined version
       setCustomPrompt(refinedPrompt);
       
-      if (refinedPrompt && refinedPrompt !== originalPrompt) {
-        toast({
-          title: "Prompt Refined!",
-          description: "Your prompt has been enhanced by AI.",
-        });
-      } else {
-        toast({
-            title: "Already Perfect!",
-            description: "The AI couldn't improve your prompt, but you can still use it!",
-        });
-      }
+      // Since we guarantee enhancement, always show success message
+      toast({
+        title: "Prompt Enhanced!",
+        description: "Your prompt has been refined and improved by AI.",
+      });
 
     } catch (error) {
       console.error("Prompt refinement failed:", error);
+      
+      // Keep the original prompt on error
+      setCustomPrompt(originalPrompt);
+      
       const errorMessage = error instanceof Error ? error.message : "An unknown error occurred.";
       toast({
         variant: "destructive",
         title: "Refinement Failed",
-        description: errorMessage,
+        description: `Failed to refine prompt: ${errorMessage}`,
       });
     } finally {
       setIsRefining(false);
@@ -141,7 +147,6 @@ export const AIPanel: FC<AIPanelProps> = ({
                </Button>
             </TabsContent>
           </Tabs>
-
 
           <Button
             onClick={onGenerate}

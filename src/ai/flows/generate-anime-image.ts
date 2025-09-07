@@ -46,6 +46,8 @@ const stylePrompts = {
     realistic: "You are an expert creative artist. Your task is to analyze the provided user's drawing and identify its core subject (e.g., a person's face, a full character, an animal, an object). Then, you will generate a new, high-quality image that artistically re-imagines that subject. Render the subject with photorealistic detail. Pay close attention to realistic lighting, shadows, textures (like skin, fabric, or metal), and accurate proportions. The final image should look like a photograph of a real object or person, maintaining the composition of the original drawing."
 };
 
+const customPromptPrefix = `You are an expert creative artist. Your task is to interpret the user's drawing as a rough conceptual sketch. Do not be influenced by the specific colors or linework of the sketch. Your primary goal is to identify the core subject of the drawing (e.g., a person, an animal, a car, a building) and then generate a completely new, high-quality image that reimagines this subject based on the user's text prompt. The final image should fit the theme and style described in the text prompt, using the original sketch only for basic composition and subject identification. User's prompt: `;
+
 const generateAnimeImageFlow = ai.defineFlow(
   {
     name: 'generateAnimeImageFlow',
@@ -53,14 +55,16 @@ const generateAnimeImageFlow = ai.defineFlow(
     outputSchema: GenerateAnimeImageOutputSchema,
   },
   async input => {
-    // If a custom prompt is provided, use it. Otherwise, use the selected style prompt.
-    const selectedPrompt = input.customPrompt || stylePrompts[input.animeStyle];
+    // If a custom prompt is provided, prepend the creative instructions. Otherwise, use the selected style prompt.
+    const finalPrompt = input.customPrompt
+      ? `${customPromptPrefix}"${input.customPrompt}"`
+      : stylePrompts[input.animeStyle];
 
     const {media} = await ai.generate({
       model: 'googleai/gemini-2.0-flash-preview-image-generation',
       prompt: [
         {media: {url: input.drawingDataUri}},
-        {text: selectedPrompt},
+        {text: finalPrompt},
       ],
       config: {
         responseModalities: ['TEXT', 'IMAGE'], // MUST provide both TEXT and IMAGE, IMAGE only won't work
