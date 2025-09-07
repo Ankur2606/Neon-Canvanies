@@ -15,7 +15,7 @@ import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 // IMPORTANT: Replace with your deployed contract address
-const CONTRACT_ADDRESS = "0x4019a6AB244D9A0129a53195239a7b7E09541244";
+const CONTRACT_ADDRESS = "0x02DF0F19f96F84fAB71d9AB2A4b572a94d8500C5";
 
 const contract = getContract({ 
   client, 
