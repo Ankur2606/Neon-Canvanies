@@ -1,4 +1,4 @@
-# 🎨 Neon Canvanies: Agentic Art Generation on the Decentralized Cloud
+# 🎨 Prototype for Neon Canvanies: Agentic Art Generation on the Decentralized Cloud 
 
 ## 1. The Problem: The Creative Bottleneck
 
@@ -25,7 +25,7 @@ Neon Canvanies is more than just a drawing app; it's an intelligent creative par
 *   **Specialized Art Agents**:
     *   **Sketch-to-Image Agent**: Utilizes the `gokaygokay/Sketch-to-Image-Kontext-Dev-LoRA` model to interpret the user's drawing and generate a foundational image.
     *   **Text-to-Image Agent**: Employs the `lodestones/ChromaV2` model to create new artwork from a user's text prompt, offering unparalleled flexibility.
-    *   **Image Editing Agent**: Leverages `Qwen/Qwen-VL-Chat` to apply stylistic transformations or user-defined edits to an existing image on the canvas.
+    *   **Image Editing Agent**: Leverages `Qwen/Qwen-Image-Edit` to apply stylistic transformations or user-defined edits to an existing image on the canvas.
 *   **Flexible User Control**: Users can either select from curated styles (Cyberpunk, Anime, etc.) or provide their own detailed prompts, giving them full control over the creative process.
 
 ### User Onboarding Flow:
@@ -41,25 +41,28 @@ Neon Canvanies is more than just a drawing app; it's an intelligent creative par
 
 ### Architecture Diagram:
 
+<img width="512" height="279" alt="image" src="https://github.com/user-attachments/assets/09b5760c-bc68-4ae1-822a-df35b5d10a78" />
+
+
 ```
 +-------------------+      +-------------------------------------------------+      +--------------------------------+
 |   User Browser    |      |         Akash Network (Decentralized Cloud)     |      |   AI Model Service Containers  |
 | (Next.js Frontend)|      |                                                 |      |      (Custom Docker Image)     |
-+--------+----------+      +---------------------+---------------------------+      +---------------+----------------+
-         |                               (HTTPS) |                                                   |
-         |  1. User Draws & Selects AI Task      |                                                   |
++--------+----------+      +---------------------+---------------------------+      +--------------+-----------------+
+         |                               (HTTPS) |                                                 |
+         |  1. User Draws & Selects AI Task      |                                                 |
          +-------------------------------------> |   Frontend Service (Next.js)                    |
                                                  +---------------------+---------------------------+
                                                                        | 2. API Request
                                                                        | (to specific AI agent)
-         +-------------------------------------------------------------+----------------------------------------------+
-         |                                                             |                                              |
-         v                                                             v                                              v
-+--------+-----------------+                  +------------------------+-------------------+                  +--------+---------------+
-| Sketch-to-Image Service  |                  |  Text-to-Image Service                   |                  | Image Editing Service  |
-| (FastAPI + Diffusers)    |                  |  (FastAPI + Diffusers)                   |                  | (FastAPI + Transformers) |
-| Model: gokaygokay/...    |                  |  Model: lodestones/ChromaV2              |                  | Model: Qwen/Qwen-VL-Chat |
-+--------------------------+                  +------------------------------------------+                  +------------------------+
+         +-------------------------------------------------------------+-----------------------------------------------------+
+         |                                                             |                                                     |
+         v                                                             v                                                     v
++--------+-----------------+                  +------------------------+-----------------+                    +--------------+--------------+
+| Sketch-to-Image Service  |                  |  Text-to-Image Service                   |                    | Image Editing Service       |
+| (FastAPI + Diffusers)    |                  |  (FastAPI + Diffusers)                   |                    | (FastAPI + Transformers)    |
+| Model: gokaygokay/...    |                  |  Model: lodestones/ChromaV2              |                    | Model: Qwen/Qwen-Image-Edit |
++--------------------------+                  +------------------------------------------+                    +-----------------------------+
 ```
 
 ---
