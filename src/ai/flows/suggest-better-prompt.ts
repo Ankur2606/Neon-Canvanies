@@ -30,10 +30,13 @@ export async function suggestBetterPrompt(
 const prompt = ai.definePrompt({
   name: 'suggestBetterPromptPrompt',
   input: {schema: SuggestBetterPromptInputSchema},
-  output: {schema: SuggestBetterPromptOutputSchema.nullable()},
-  prompt: `You are an AI assistant that excels at creative writing and prompt engineering for text-to-image models. Your task is to take a user's input and transform it into a more descriptive, detailed, and evocative prompt that will result in a higher-quality and more artistic image.
-
-  Focus on adding details about the subject, setting, lighting, mood, and artistic style. Do not change the core subject of the user's prompt, but enhance it.
+  output: {schema: SuggestBetterPromptOutputSchema},
+  prompt: `You are an AI assistant for creative writing and prompt engineering for text-to-image models.
+  Your task is to take a user's input and transform it into a more descriptive, detailed, and evocative prompt.
+  - Enhance the prompt by adding details about the subject, setting, lighting, mood, and artistic style.
+  - DO NOT change the core subject of the user's prompt.
+  - If you cannot improve the prompt or if it violates content policies, return the original prompt unmodified.
+  - Your response must be only the prompt text itself, with no extra formatting, labels, or introductory text.
 
   User's Prompt:
   "{{{prompt}}}"
@@ -50,8 +53,10 @@ const suggestBetterPromptFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await prompt(input);
+    // The prompt is now designed to always return a string, so a null check is less critical
+    // but we keep it as a safeguard.
     if (!output) {
-      throw new Error('The AI was unable to refine the prompt. This may be due to a content policy or temporary issue.');
+        return input.prompt;
     }
     return output;
   }
