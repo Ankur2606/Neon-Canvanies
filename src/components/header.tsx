@@ -1,10 +1,11 @@
 
 'use client';
 
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { useSidebar } from '@/hooks/use-sidebar';
-import { PanelLeft, X } from 'lucide-react';
+import { PanelLeft, X, Users } from 'lucide-react';
 import { WalletConnector } from './wallet-connector';
 
 const MobileSidebarToggle = () => {
@@ -29,6 +30,12 @@ export const Header = ({ children }: { children?: React.ReactNode }) => {
                 <div className="hidden md:block">
                     <SidebarTrigger />
                 </div>
+                <Link href="/marketplace">
+                  <Button variant="ghost" className="hidden md:flex items-center space-x-2 hover:bg-primary/20">
+                    <Users className="w-4 h-4" />
+                    <span>Marketplace</span>
+                  </Button>
+                </Link>
                 <div className="hidden md:block">
                     <WalletConnector />
                 </div>
