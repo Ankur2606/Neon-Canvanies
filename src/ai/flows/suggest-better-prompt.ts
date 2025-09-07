@@ -27,10 +27,11 @@ export async function suggestBetterPrompt(
   return suggestBetterPromptFlow(input);
 }
 
-const prompt = ai.definePrompt({
+// This prompt is now more flexible and does not enforce a strict string output schema.
+// This prevents the Genkit validation error if the model returns null or an unexpected format.
+const suggestBetterPromptPrompt = ai.definePrompt({
   name: 'suggestBetterPromptPrompt',
   input: {schema: SuggestBetterPromptInputSchema},
-  output: {schema: SuggestBetterPromptOutputSchema},
   prompt: `You are an AI assistant for creative writing and prompt engineering for text-to-image models.
   Your task is to take a user's input and transform it into a more descriptive, detailed, and evocative prompt.
   - Enhance the prompt by adding details about the subject, setting, lighting, mood, and artistic style.
@@ -52,12 +53,17 @@ const suggestBetterPromptFlow = ai.defineFlow(
     outputSchema: SuggestBetterPromptOutputSchema,
   },
   async input => {
-    const {output} = await prompt(input);
-    // The prompt is now designed to always return a string, so a null check is less critical
-    // but we keep it as a safeguard.
-    if (!output) {
-        return input.prompt;
+    const response = await suggestBetterPromptPrompt(input);
+    const refinedPrompt = response.output;
+
+    // This is the robust check. If the AI returns null, undefined, or a non-string response,
+    // we safely fall back to the original prompt. This guarantees our flow always
+    // returns a valid string, fulfilling its schema contract.
+    if (typeof refinedPrompt === 'string' && refinedPrompt.trim().length > 0) {
+        return refinedPrompt;
     }
-    return output;
+
+    // Fallback to the original prompt if AI fails to provide a valid refinement.
+    return input.prompt;
   }
 );
