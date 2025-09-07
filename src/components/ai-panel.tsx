@@ -62,12 +62,22 @@ export const AIPanel: FC<AIPanelProps> = ({
     if (!customPrompt.trim()) return;
     setIsRefining(true);
     try {
-      const refinedPrompt = await suggestBetterPrompt({ prompt: customPrompt });
-      setCustomPrompt(refinedPrompt);
-      toast({
-        title: "Prompt Refined!",
-        description: "Your prompt has been enhanced by AI.",
-      });
+      const originalPrompt = customPrompt;
+      const refinedPrompt = await suggestBetterPrompt({ prompt: originalPrompt });
+      
+      if (refinedPrompt && refinedPrompt !== originalPrompt) {
+        setCustomPrompt(refinedPrompt);
+        toast({
+          title: "Prompt Refined!",
+          description: "Your prompt has been enhanced by AI.",
+        });
+      } else {
+        toast({
+            title: "Already Perfect!",
+            description: "The AI couldn't improve your prompt, but you can still use it!",
+        });
+      }
+
     } catch (error) {
       console.error("Prompt refinement failed:", error);
       toast({
