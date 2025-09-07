@@ -27,8 +27,6 @@ export async function suggestBetterPrompt(
   return suggestBetterPromptFlow(input);
 }
 
-// This prompt is now more flexible and does not enforce a strict string output schema.
-// This prevents the Genkit validation error if the model returns null or an unexpected format.
 const suggestBetterPromptPrompt = ai.definePrompt({
   name: 'suggestBetterPromptPrompt',
   input: {schema: SuggestBetterPromptInputSchema},
@@ -53,17 +51,27 @@ const suggestBetterPromptFlow = ai.defineFlow(
     outputSchema: SuggestBetterPromptOutputSchema,
   },
   async input => {
-    const response = await suggestBetterPromptPrompt(input);
-    const refinedPrompt = response.output;
+    try {
+      const response = await suggestBetterPromptPrompt(input);
+      const refinedPrompt = response.output;
+      
+      console.log('AI Refinement returned:', refinedPrompt);
 
-    // This is the robust check. If the AI returns null, undefined, or a non-string response,
-    // we safely fall back to the original prompt. This guarantees our flow always
-    // returns a valid string, fulfilling its schema contract.
-    if (typeof refinedPrompt === 'string' && refinedPrompt.trim().length > 0) {
-        return refinedPrompt;
+      if (typeof refinedPrompt === 'string' && refinedPrompt.trim().length > 0) {
+          return refinedPrompt;
+      }
+
+      // Fallback to the original prompt if AI fails to provide a valid refinement.
+      console.log('AI did not provide a valid refinement. Falling back to original prompt.');
+      return input.prompt;
+
+    } catch (error) {
+      console.error("Error during AI prompt refinement:", error);
+      // Re-throw a more user-friendly error to be caught by the frontend.
+      if (error instanceof Error) {
+        throw new Error(`AI refinement failed: ${error.message}`);
+      }
+      throw new Error('An unexpected error occurred during AI prompt refinement.');
     }
-
-    // Fallback to the original prompt if AI fails to provide a valid refinement.
-    return input.prompt;
   }
 );
