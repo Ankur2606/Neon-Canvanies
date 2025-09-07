@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Button } from './ui/button';
 import { Sparkles } from 'lucide-react';
+import { ScrollArea } from './ui/scroll-area';
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -52,11 +53,13 @@ const MobileAIPanelDialog = ({ children }: { children: ReactNode }) => {
       >
         <Sparkles />
       </Button>
-      <DialogContent className="h-full max-h-[80vh] flex flex-col">
-        <DialogHeader>
+      <DialogContent className="h-full max-h-[90vh] flex flex-col p-0">
+        <DialogHeader className="p-4 pb-0">
           <DialogTitle>AI Generation</DialogTitle>
         </DialogHeader>
-        {children}
+        <div className="flex-1 overflow-hidden">
+          {children}
+        </div>
       </DialogContent>
     </Dialog>
   );

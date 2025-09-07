@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Dispatch, FC, SetStateAction, useState } from 'react';
@@ -58,39 +59,38 @@ export const AIPanel: FC<AIPanelProps> = ({
   };
 
   const handleRefinePrompt = async () => {
-    if (!customPrompt.trim()) return;
-    
+    if (!customPrompt.trim()) {
+      return;
+    }
     setIsRefining(true);
     const originalPrompt = customPrompt;
-    
+  
     try {
+      // Start the AI call
       const refinedPrompt = await suggestBetterPrompt({ prompt: originalPrompt });
-      
-      // Check if we got a valid refined prompt
-      if (!refinedPrompt || typeof refinedPrompt !== 'string' || !refinedPrompt.trim()) {
-        throw new Error("AI returned an invalid response");
+      console.log('AI Refinement returned:', refinedPrompt);
+  
+      // Check if we got a valid, *different* prompt back
+      if (refinedPrompt && refinedPrompt !== originalPrompt) {
+        setCustomPrompt(refinedPrompt);
+        toast({
+          title: "Prompt Enhanced!",
+          description: "Your prompt has been improved by the AI.",
+        });
+      } else {
+        // This case handles if the AI returns the same prompt or an error state
+        toast({
+          title: "Prompt is Already Perfect!",
+          description: "The AI couldn't find a way to improve this prompt, but you can still use it.",
+        });
       }
-
-      // Update the prompt with the refined version
-      setCustomPrompt(refinedPrompt);
-      
-      // Since we guarantee enhancement, always show success message
-      toast({
-        title: "Prompt Enhanced!",
-        description: "Your prompt has been refined and improved by AI.",
-      });
-
     } catch (error) {
-      console.error("Prompt refinement failed:", error);
-      
-      // Keep the original prompt on error
-      setCustomPrompt(originalPrompt);
-      
-      const errorMessage = error instanceof Error ? error.message : "An unknown error occurred.";
+      // This will catch network errors or if the flow itself throws an error
+      console.error("Error during prompt refinement:", error);
       toast({
         variant: "destructive",
         title: "Refinement Failed",
-        description: `Failed to refine prompt: ${errorMessage}`,
+        description: error instanceof Error ? error.message : "An unexpected error occurred.",
       });
     } finally {
       setIsRefining(false);
@@ -98,11 +98,9 @@ export const AIPanel: FC<AIPanelProps> = ({
   };
 
   return (
-    <aside className="w-full h-full bg-card/50 backdrop-blur-sm flex-col z-10 gap-4 md:flex md:w-96 md:border-l md:border-primary/20">
-      <ScrollArea className="flex-1">
-        <div className="space-y-6 p-4 md:p-6">
+    <aside className="w-full h-full bg-card/50 backdrop-blur-sm flex flex-col z-10 md:w-96 md:border-l md:border-primary/20">
+      <div className="flex-shrink-0 p-4 md:p-6 md:pb-0">
           <h2 className="text-xl font-bold text-glow-accent text-center hidden md:block">AI Generation</h2>
-          
           <Tabs value={generationMode} onValueChange={(v) => setGenerationMode(v as GenerationMode)} className="w-full">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="style">AI Styles</TabsTrigger>
@@ -147,7 +145,10 @@ export const AIPanel: FC<AIPanelProps> = ({
                </Button>
             </TabsContent>
           </Tabs>
+      </div>
 
+      <ScrollArea className="flex-1">
+        <div className="space-y-6 p-4 pt-0 md:p-6 md:pt-6">
           <Button
             onClick={onGenerate}
             disabled={isGenerating || isRefining}
