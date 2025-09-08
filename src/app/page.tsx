@@ -155,6 +155,7 @@ const NeonCanvasPage: FC = () => {
         setGenerationMode={setGenerationMode}
         customPrompt={customPrompt}
         setCustomPrompt={setCustomPrompt}
+        onOpenPricing={() => setShowPricingModal(true)}
       >
         <DrawingCanvas
             ref={canvasRef}

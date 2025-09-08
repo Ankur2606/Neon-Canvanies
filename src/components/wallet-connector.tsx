@@ -31,7 +31,7 @@ const ConnectButton = ({isConnecting, onConnect}: {isConnecting: boolean, onConn
     </Button>
 );
 
-const ConnectedDisplay = ({ onDisconnect }: { onDisconnect: () => void }) => {
+const ConnectedDisplay = ({ onDisconnect, onOpenPricing }: { onDisconnect: () => void, onOpenPricing: () => void }) => {
   const account = useActiveAccount();
   const [showBalance, setShowBalance] = useState(false);
   const { credits } = useCredits();
@@ -52,18 +52,14 @@ const ConnectedDisplay = ({ onDisconnect }: { onDisconnect: () => void }) => {
             </span>
             <div className="text-xs text-muted-foreground flex items-center justify-between gap-4 pl-6">
               <span>BlockDAG Testnet</span>
-              <div className="flex items-center gap-4">
-                {balance && (
-                  <span className="font-mono flex items-center gap-1.5">
-                    <svg className="w-3 h-3 text-yellow-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5l4.243 4.243-2.122 2.121-2.12-2.12-2.122 2.12-2.121-2.121L12 .5zm7.778 6.061l-2.12 2.121 2.12 2.122 2.122-2.121-2.121-2.122zM4.222 6.561L2.1 8.682l2.122 2.121 2.12-2.12-2.12-2.122zm7.778 2.121L7.757 12l4.243 4.243L16.243 12l-4.243-3.318zM12 14.121l-2.12-2.121-2.122 2.12 4.242 4.243 4.243-4.242-2.121-2.12-2.121 2.121z"></path></svg>
-                    {parseFloat(balance.displayValue).toFixed(4)} {balance.symbol}
-                  </span>
-                )}
-                 <span className="font-mono flex items-center gap-1.5">
-                    <Diamond className="size-3 text-cyan-400"/>
-                    {credits} Credits
-                  </span>
-              </div>
+              <button
+                onClick={onOpenPricing}
+                className="font-mono flex items-center gap-1.5 cursor-pointer hover:text-accent transition-colors"
+                title="Recharge Credits"
+              >
+                <Diamond className="size-3 text-cyan-400"/>
+                {credits} Credits
+              </button>
             </div>
          </div>
          <Button variant="destructive" size="icon" onClick={onDisconnect} title="Disconnect Wallet" className="h-8 w-8 shrink-0">
@@ -73,7 +69,7 @@ const ConnectedDisplay = ({ onDisconnect }: { onDisconnect: () => void }) => {
   )
 }
 
-export const WalletConnector = () => {
+export const WalletConnector = ({ onOpenPricing }: { onOpenPricing: () => void }) => {
   const { connect } = useConnect();
   const { disconnect } = useDisconnect();
   const account = useActiveAccount();
@@ -150,7 +146,7 @@ export const WalletConnector = () => {
           </DialogHeader>
           <div className="mt-4">
             {account ? (
-              <ConnectedDisplay onDisconnect={handleDisconnect} />
+              <ConnectedDisplay onDisconnect={handleDisconnect} onOpenPricing={onOpenPricing} />
             ) : (
               <ConnectButton isConnecting={isConnecting} onConnect={handleConnect} />
             )}
@@ -161,7 +157,7 @@ export const WalletConnector = () => {
   }
   
   if (account) {
-    return <ConnectedDisplay onDisconnect={handleDisconnect} />;
+    return <ConnectedDisplay onDisconnect={handleDisconnect} onOpenPricing={onOpenPricing} />;
   }
 
   return <ConnectButton isConnecting={isConnecting} onConnect={handleConnect} />;

@@ -38,6 +38,7 @@ interface AppLayoutProps {
   setGenerationMode: Dispatch<SetStateAction<GenerationMode>>;
   customPrompt: string;
   setCustomPrompt: Dispatch<SetStateAction<string>>;
+  onOpenPricing: () => void;
 }
 
 const MobileAIPanelDialog = ({ children }: { children: ReactNode }) => {
@@ -88,7 +89,8 @@ export const AppLayout: FC<AppLayoutProps> = ({
   generationMode,
   setGenerationMode,
   customPrompt,
-  setCustomPrompt
+  setCustomPrompt,
+  onOpenPricing,
 }) => {
   const isMobile = useIsMobile();
 
@@ -125,7 +127,7 @@ export const AppLayout: FC<AppLayoutProps> = ({
       </Sidebar>
       
       <SidebarInset className="flex-1 flex flex-col relative bg-black/20">
-          <Header>
+          <Header onOpenPricing={onOpenPricing}>
             {isMobile && (
               <MobileAIPanelDialog>
                   <AIPanel {...aiPanelProps} />
