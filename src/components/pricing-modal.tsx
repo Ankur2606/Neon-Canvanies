@@ -13,6 +13,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Button } from './ui/button';
 import { Diamond, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { abi } from '../../contracts/artifacts/contracts/BdagCredit.sol/BdagCredit.json';
 
 // IMPORTANT: Replace with your deployed contract address
 const CONTRACT_ADDRESS = "0x02DF0F19f96F84fAB71d9AB2A4b572a94d8500C5";
@@ -20,7 +21,8 @@ const CONTRACT_ADDRESS = "0x02DF0F19f96F84fAB71d9AB2A4b572a94d8500C5";
 const contract = getContract({ 
   client, 
   chain: bdagTestnet, 
-  address: CONTRACT_ADDRESS 
+  address: CONTRACT_ADDRESS,
+  abi,
 });
 
 const PLANS = [
