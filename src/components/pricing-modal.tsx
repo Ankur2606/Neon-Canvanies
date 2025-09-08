@@ -95,8 +95,17 @@ export const PricingModal: React.FC<PricingModalProps> = ({ open, onOpenChange }
           <DialogTitle className="text-3xl font-bold text-center text-glow-accent mb-2">
             Out of Credits!
           </DialogTitle>
-          <DialogDescription className="text-center text-lg text-slate-400">
+          <DialogDescription className="text-center text-lg text-slate-400 max-w-xl mx-auto">
             Recharge your creative energy. Purchase a credit pack with BDAG to continue.
+            <br/>
+            <a 
+              href="https://primordial.bdagscan.com/faucet" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-accent hover:text-accent/80 font-bold underline underline-offset-4 transition-colors text-glow-accent"
+            >
+              Need test tokens? Get your BDAG from the faucet now!
+            </a>
           </DialogDescription>
         </DialogHeader>
         <div className="grid md:grid-cols-3 gap-6 py-6">
