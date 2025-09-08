@@ -7,15 +7,14 @@ import {
   useActiveAccount,
   useDisconnect,
   useActiveWallet,
-  useWalletBalance,
-  useSwitchActiveWalletChain
+  useWalletBalance
 } from "thirdweb/react";
 import { createWallet } from "thirdweb/wallets";
 import { client } from "@/lib/thirdweb";
 import { bdagTestnet } from '@/lib/chains';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from './ui/button';
-import { Loader2, Check, Power, Eye, EyeOff, Diamond } from 'lucide-react';
+import { Loader2, Check, Power, Diamond } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 import { useCredits } from '@/context/credits-context';
@@ -78,7 +77,6 @@ export const WalletConnector = ({ onOpenPricing }: { onOpenPricing: () => void }
   const { disconnect } = useDisconnect();
   const account = useActiveAccount();
   const wallet = useActiveWallet();
-  const switchChain = useSwitchActiveWalletChain();
   const { syncCreditsFromWallet } = useCredits();
 
   const [isConnecting, setIsConnecting] = useState(false);
