@@ -2,9 +2,9 @@
 
 ## 1. The Problem: The Creative Bottleneck
 
-Digital art creation has a high barrier to entry. While many people have creative ideas, turning a simple sketch into a polished, high-quality piece of art requires technical skill, expensive software, and significant time. Furthermore, existing AI art tools often impose restrictive guardrails, operate as black boxes, and offer limited flexibility, stifling true creative freedom.
+Digital art creation has a high barrier to entry. While many people have creative ideas, turning a simple sketch into a polished, high-quality piece of art requires technical skill, expensive software, and significant time. Existing AI art tools can be a solution, but they often impose restrictive guardrails, operate as black boxes, and offer limited flexibility, stifling true creative freedom. How can we empower everyday users to bring their most imaginative visions to life, without needing to be a professional artist?
 
-## 2. The Solution: Democratizing Digital Art with Agentic AI
+## 2. The Solution: Your Intelligent Creative Partner
 
 **Neon Canvanies** is a web-based drawing application that bridges the gap between imagination and creation. It provides an intuitive canvas for users to sketch their ideas and leverages a suite of autonomous AI agents, powered by Google's Gemini model, to transform those sketches into stunning, production-quality artwork.
 
@@ -12,11 +12,17 @@ Our solution is built on two core principles:
 *   **Creative Freedom**: We use powerful generative AI to give users maximum creative control. Users can select from predefined styles, write their own custom prompts with "Dream-Mode," and even use an AI assistant to refine and enhance their creative ideas.
 *   **Decentralized Integration**: The application includes a full-featured design marketplace integrated with the **BlockDAG (BDAG) Testnet**. This allows users to post jobs, hire designers, and manage payments securely on the blockchain using the Thirdweb SDK and a non-custodial wallet like MetaMask.
 
----
+## 3. How It Works: Your Neon-Drenched Journey
 
-## 3. Innovative Features & Architecture
+Welcome to your very own corner of the internet for creating dazzling cyberpunk masterpieces. Think flying cars, rainy cityscapes, and glowing neon signs... but you're the one creating the art!
 
-Neon Canvanies is more than just a drawing app; it's an intelligent creative partner. Our architecture is designed around a collection of specialized, agentic AI flows that work together with a decentralized marketplace to bring a user's vision to life.
+<img width="512" height="279" alt="Architecture Diagram" src="https://github.com/user-attachments/assets/09b5760c-bc68-4ae1-822a-df35b5d10a78" />
+
+Our application uses a modern web stack with a Next.js frontend and a Genkit backend that orchestrates calls to the Google Gemini and Akash Chat APIs. Here’s how you can get started:
+
+*   **Frontend**: A responsive Next.js application with React, ShadCN components, and Tailwind CSS provides an intuitive and visually rich user experience.
+*   **Backend AI Flows**: We use Genkit, an open-source AI framework, to define our AI logic. These server-side flows handle prompt construction, interact with the Gemini API for image generation, and call the Akash Chat API for prompt refinement.
+*   **Wallet & Blockchain**: The frontend integrates the Thirdweb SDK to connect to users' MetaMask wallets and interact with custom Solidity smart contracts deployed on the BlockDAG Testnet.
 
 ### Key Features:
 
@@ -29,16 +35,6 @@ Neon Canvanies is more than just a drawing app; it's an intelligent creative par
     *   **Post Jobs & Hire Talent**: Clients can post design jobs with budgets specified in BDAG.
     *   **Blockchain Payments**: The marketplace is powered by a custom Solidity smart contract on the BlockDAG Testnet, handling designer registration and job payments in BDAG.
     *   **Wallet Integration**: Securely connect your MetaMask wallet to the BlockDAG Testnet to interact with the marketplace.
-
-### Architecture Diagram:
-
-Our application uses a modern web stack with a Next.js frontend and a Genkit backend that orchestrates calls to the Google Gemini model.
-
-<img width="512" height="279" alt="image" src="https://github.com/user-attachments/assets/09b5760c-bc68-4ae1-822a-df35b5d10a78" />
-
-*   **Frontend**: A responsive Next.js application with React, ShadCN components, and Tailwind CSS.
-*   **Backend AI Flows**: We use Genkit, an open-source AI framework, to define our AI logic. These server-side flows handle prompt construction, interact with the Gemini API for image generation, and call the Akash Chat API for prompt refinement.
-*   **Wallet & Blockchain**: The frontend integrates the Thirdweb SDK to connect to users' MetaMask wallets and interact with custom smart contracts deployed on the BlockDAG Testnet.
 
 ## 4. Development & Challenges
 
