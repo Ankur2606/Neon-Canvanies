@@ -1,8 +1,9 @@
-import "@nomicfoundation/hardhat-toolbox";
+
+require("@nomicfoundation/hardhat-toolbox");
 
 /** @type import('hardhat/config').HardhatUserConfig */
-const config = {
-  solidity: "0.8.24",
+module.exports = {
+  solidity: "0.8.19",
   networks: {
     blockdagTestnet: {
       url: "https://rpc-testnet.blockdag.network",
@@ -11,5 +12,3 @@ const config = {
     },
   },
 };
-
-export default config;

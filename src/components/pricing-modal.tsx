@@ -9,9 +9,9 @@ import { client } from '@/lib/thirdweb';
 import { bdagTestnet } from '@/lib/chains';
 import { useCredits } from '@/context/credits-context';
 import { useToast } from '@/hooks/use-toast';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from './ui/dialog';
 import { Button } from './ui/button';
-import { Loader2 } from 'lucide-react';
+import { Diamond, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 // IMPORTANT: Replace with your deployed contract address
@@ -51,9 +51,7 @@ export const PricingModal: React.FC<PricingModalProps> = ({ open, onOpenChange }
     try {
       const transaction = prepareContractCall({ 
         contract, 
-        method: "buyCredits", 
-        // Note: The example contract's `buyCredits` takes `msg.value` (native currency), not a BDAG token amount.
-        // We'll send BDAG as the transaction value.
+        method: "buyCredits",
         params: [], // The contract method takes no params, it uses msg.value
         value: toWei(plan.bdag.toString()),
       });
