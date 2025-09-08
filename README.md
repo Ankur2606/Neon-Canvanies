@@ -16,7 +16,23 @@ Our solution is built on two core principles:
 
 Welcome to your very own corner of the internet for creating dazzling cyberpunk masterpieces. Think flying cars, rainy cityscapes, and glowing neon signs... but you're the one creating the art!
 
-<img width="512" height="279" alt="Architecture Diagram" src="https://github.com/user-attachments/assets/09b5760c-bc68-4ae1-822a-df35b5d10a78" />
+```ascii
++--------------------------------+      +------------------------+      +-----------------------+
+|         User's Browser         |      |                        |      |                       |
+|                                |      |   [🦊 MetaMask Wallet] |      |   [BlockDAG Testnet]  |
+|  [🎨 Neon Canvanies Frontend]  |<---->|   (User's Keys)        |<---->|  (Smart Contracts)    |
+|  (Next.js, React, Thirdweb)    |      |                        |      |                       |
++----------------|---------------+      +------------------------+      +-----------------------+
+                 |
+                 | (HTTP API Calls)
+                 |
++----------------v---------------+      +------------------------+      +-----------------------+
+|     [⚡ Genkit AI Backend]      |      |                        |      |                       |
+|    (Orchestrates AI Flows)     |----->| [🤖 Google Gemini API] |      |  [🧠 Akash Chat API]  |
+|                                |      |  (Image Generation)    |      |   (Prompt Refinement) |
++--------------------------------+      +------------------------+      +-----------------------+
+
+```
 
 Our application uses a modern web stack with a Next.js frontend and a Genkit backend that orchestrates calls to the Google Gemini and Akash Chat APIs. Here’s how you can get started:
 
