@@ -8,6 +8,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { X, Plus } from "lucide-react";
+import { useBdagJobPayment } from "@/hooks/use-bdag-job-payment";
+import { useActiveAccount } from "thirdweb/react";
 
 interface PostJobModalProps {
   isOpen: boolean;
@@ -21,6 +23,9 @@ export function PostJobModal({ isOpen, onClose }: PostJobModalProps) {
   const [skills, setSkills] = useState<string[]>([]);
   const [newSkill, setNewSkill] = useState("");
 
+  const { postJob, isLoading, error } = useBdagJobPayment();
+  const account = useActiveAccount();
+
   const handleAddSkill = () => {
     if (newSkill.trim() && !skills.includes(newSkill.trim())) {
       setSkills([...skills, newSkill.trim()]);
@@ -32,16 +37,37 @@ export function PostJobModal({ isOpen, onClose }: PostJobModalProps) {
     setSkills(skills.filter(skill => skill !== skillToRemove));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically send the data to your backend
-    console.log({ title, description, budget, skills });
-    // Reset form
-    setTitle("");
-    setDescription("");
-    setBudget("");
-    setSkills([]);
-    onClose();
+
+    if (!account) {
+      alert("Please connect your wallet first");
+      return;
+    }
+
+    // Parse budget (assuming it's a number like "50" or "50 - 100", take first number)
+    const budgetValue = parseInt(budget.split(' ')[0]);
+    if (isNaN(budgetValue)) {
+      alert("Please enter a valid budget");
+      return;
+    }
+
+    // Combine title and description for the contract
+    const fullDescription = `${title}\n\n${description}\n\nSkills: ${skills.join(', ')}`;
+
+    try {
+      await postJob(fullDescription, budgetValue);
+
+      // Reset form
+      setTitle("");
+      setDescription("");
+      setBudget("");
+      setSkills([]);
+      onClose();
+    } catch (error) {
+      console.error("Error posting job:", error);
+      // Error is already handled by the hook
+    }
   };
 
   return (
@@ -50,6 +76,11 @@ export function PostJobModal({ isOpen, onClose }: PostJobModalProps) {
         <DialogHeader>
           <DialogTitle>Post a New Job</DialogTitle>
         </DialogHeader>
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+            {error}
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
             <Label htmlFor="title">Job Title</Label>
@@ -117,11 +148,11 @@ export function PostJobModal({ isOpen, onClose }: PostJobModalProps) {
           </div>
 
           <div className="flex gap-3 pt-4">
-            <Button type="button" variant="outline" onClick={onClose} className="flex-1">
+            <Button type="button" variant="outline" onClick={onClose} className="flex-1" disabled={isLoading}>
               Cancel
             </Button>
-            <Button type="submit" className="flex-1">
-              Post Job
+            <Button type="submit" className="flex-1" disabled={isLoading}>
+              {isLoading ? "Posting..." : "Post Job"}
             </Button>
           </div>
         </form>

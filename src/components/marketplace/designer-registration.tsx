@@ -9,6 +9,8 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { X, Plus, Upload } from "lucide-react";
+import { useBdagJobPayment } from "@/hooks/use-bdag-job-payment";
+import { useActiveAccount } from "thirdweb/react";
 
 interface DesignerRegistrationProps {
   isOpen: boolean;
@@ -28,6 +30,9 @@ export function DesignerRegistration({ isOpen, onClose }: DesignerRegistrationPr
   const [skills, setSkills] = useState<string[]>([]);
   const [newSkill, setNewSkill] = useState("");
 
+  const { registerDesigner, isLoading, error } = useBdagJobPayment();
+  const account = useActiveAccount();
+
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
@@ -43,22 +48,39 @@ export function DesignerRegistration({ isOpen, onClose }: DesignerRegistrationPr
     setSkills(skills.filter(skill => skill !== skillToRemove));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically send the data to your backend
-    console.log({ ...formData, skills });
-    // Reset form
-    setFormData({
-      name: "",
-      email: "",
-      bio: "",
-      location: "",
-      hourlyRate: "",
-      portfolioUrl: "",
-      avatar: ""
-    });
-    setSkills([]);
-    onClose();
+
+    if (!account) {
+      alert("Please connect your wallet first");
+      return;
+    }
+
+    const rate = parseInt(formData.hourlyRate);
+    if (isNaN(rate)) {
+      alert("Please enter a valid hourly rate");
+      return;
+    }
+
+    try {
+      await registerDesigner(rate, formData.name);
+
+      // Reset form
+      setFormData({
+        name: "",
+        email: "",
+        bio: "",
+        location: "",
+        hourlyRate: "",
+        portfolioUrl: "",
+        avatar: ""
+      });
+      setSkills([]);
+      onClose();
+    } catch (error) {
+      console.error("Error registering designer:", error);
+      // Error is already handled by the hook
+    }
   };
 
   return (
@@ -67,6 +89,11 @@ export function DesignerRegistration({ isOpen, onClose }: DesignerRegistrationPr
         <DialogHeader>
           <DialogTitle>Join as a Designer</DialogTitle>
         </DialogHeader>
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+            {error}
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Avatar Upload */}
           <div className="flex flex-col items-center space-y-4">
@@ -187,11 +214,11 @@ export function DesignerRegistration({ isOpen, onClose }: DesignerRegistrationPr
           </div>
 
           <div className="flex gap-3 pt-4">
-            <Button type="button" variant="outline" onClick={onClose} className="flex-1">
+            <Button type="button" variant="outline" onClick={onClose} className="flex-1" disabled={isLoading}>
               Cancel
             </Button>
-            <Button type="submit" className="flex-1">
-              Join as Designer
+            <Button type="submit" className="flex-1" disabled={isLoading}>
+              {isLoading ? "Registering..." : "Join as Designer"}
             </Button>
           </div>
         </form>
