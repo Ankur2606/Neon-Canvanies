@@ -2,8 +2,8 @@
 'use client';
 
 import { useState } from "react";
-import { useActiveAccount, useSendTransaction, useSwitchActiveWalletChain, getWalletBalance } from "thirdweb/react";
-import { prepareTransaction, toWei } from "thirdweb";
+import { useActiveAccount, useSendTransaction, useSwitchActiveWalletChain } from "thirdweb/react";
+import { prepareTransaction, toWei, getWalletBalance } from "thirdweb";
 import { bdagTestnet } from "@/lib/chains";
 import { client } from "@/lib/thirdweb";
 import { useToast } from "@/hooks/use-toast";
@@ -41,19 +41,7 @@ export function useBdagTransfer() {
         toast({
           variant: "destructive",
           title: "Insufficient Funds",
-          description: (
-            <div>
-              You do not have enough BDAG to complete this transaction.
-              <a 
-                href="https://primordial.bdagscan.com/faucet" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="font-bold underline underline-offset-2 ml-1"
-              >
-                Get test funds from the faucet.
-              </a>
-            </div>
-          ),
+          description: "You do not have enough BDAG. Get test funds from the faucet: https://primordial.bdagscan.com/faucet",
         });
         return;
       }
