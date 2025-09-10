@@ -10,12 +10,13 @@ export const bdagTestnet = defineChain({
     symbol: "BDAG",
     decimals: 18,
   },
-  rpc: "https://rpc.primordial.bdagscan.com",
+  rpc: "https://rpc.testnet.blockdag.network",
   blockExplorers: [
     {
       name: "BlockDAG Explorer",
       url: "https://primordial.bdagscan.com",
     },
   ],
+  faucets: ["https://primordial.bdagscan.com/faucet"],
   testnet: true,
 });
