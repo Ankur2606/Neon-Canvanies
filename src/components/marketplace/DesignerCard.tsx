@@ -1,11 +1,15 @@
+
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Star, MapPin, Briefcase, MessageCircle } from "lucide-react";
+import { Star, MapPin, Briefcase, MessageCircle, Loader2 } from "lucide-react";
 import { BDAGPrice } from "./BDAGPrice";
+import { useBdagTransfer } from "@/hooks/use-bdag-transfer";
+
+const PROJECT_WALLET_ADDRESS = "0x0734EdcC126a08375a08C02c3117d44B24dF47Fa";
 
 interface Designer {
   id: number;
@@ -25,6 +29,14 @@ interface DesignerCardProps {
 }
 
 export function DesignerCard({ designer }: DesignerCardProps) {
+  const { transferBdag, isTransferring } = useBdagTransfer();
+
+  const handleHire = () => {
+    // Use the designer's hourly rate for the transaction.
+    const hireAmount = designer.hourlyRate.replace(' BDAG', '');
+    transferBdag(PROJECT_WALLET_ADDRESS, hireAmount);
+  }
+
   return (
     <Card className="hover:shadow-lg transition-shadow">
       <CardHeader className="text-center">
@@ -76,8 +88,9 @@ export function DesignerCard({ designer }: DesignerCardProps) {
         </div>
 
         <div className="flex gap-2">
-          <Button className="flex-1" size="sm">
-            Hire Me
+          <Button className="flex-1" size="sm" onClick={handleHire} disabled={isTransferring}>
+            {isTransferring ? <Loader2 className="animate-spin"/> : null}
+            {isTransferring ? "Processing..." : "Hire Me"}
           </Button>
           <Button variant="outline" size="sm">
             <MessageCircle className="h-4 w-4" />

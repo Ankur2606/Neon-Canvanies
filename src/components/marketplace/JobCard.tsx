@@ -1,11 +1,15 @@
+
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Clock, MapPin, Star } from "lucide-react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Clock, Loader2 } from "lucide-react";
 import { BDAGPrice } from "./BDAGPrice";
+import { useBdagTransfer } from "@/hooks/use-bdag-transfer";
+
+const PROJECT_WALLET_ADDRESS = "0x0734EdcC126a08375a08C02c3117d44B24dF47Fa";
 
 interface Job {
   id: number;
@@ -23,6 +27,15 @@ interface JobCardProps {
 }
 
 export function JobCard({ job }: JobCardProps) {
+  const { transferBdag, isTransferring } = useBdagTransfer();
+
+  const handleApply = () => {
+    // Use the lower end of the budget range as the application fee.
+    // E.g., "50 - 100 BDAG" -> "50"
+    const applyAmount = job.budget.split(' ')[0];
+    transferBdag(PROJECT_WALLET_ADDRESS, applyAmount);
+  };
+
   return (
     <Card className="hover:shadow-lg transition-shadow">
       <CardHeader>
@@ -65,8 +78,9 @@ export function JobCard({ job }: JobCardProps) {
         </div>
 
         <div className="flex gap-2">
-          <Button className="flex-1">
-            Apply Now
+          <Button className="flex-1" onClick={handleApply} disabled={isTransferring}>
+            {isTransferring ? <Loader2 className="animate-spin" /> : null}
+            {isTransferring ? "Applying..." : "Apply Now"}
           </Button>
           <Button variant="outline" size="sm">
             Save
