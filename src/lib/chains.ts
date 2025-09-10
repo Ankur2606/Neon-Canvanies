@@ -10,7 +10,7 @@ export const bdagTestnet = defineChain({
     symbol: "BDAG",
     decimals: 18,
   },
-  rpc: "https://rpc.testnet.blockdag.network",
+  rpc: "https://rpc.primordial.bdagscan.com/",
   blockExplorers: [
     {
       name: "BlockDAG Explorer",

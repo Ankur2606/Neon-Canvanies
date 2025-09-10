@@ -2,7 +2,7 @@
 'use client';
 
 import { useState } from "react";
-import { useActiveAccount, useSendTransaction, useSwitchActiveWalletChain } from "thirdweb/react";
+import { useActiveAccount, useSendTransaction, useSwitchActiveWalletChain, getWalletBalance } from "thirdweb/react";
 import { prepareTransaction, toWei } from "thirdweb";
 import { bdagTestnet } from "@/lib/chains";
 import { client } from "@/lib/thirdweb";
@@ -28,9 +28,39 @@ export function useBdagTransfer() {
           await switchChain(bdagTestnet);
       }
 
+      // Manually check balance before attempting transaction
+      const balance = await getWalletBalance({
+        client,
+        chain: bdagTestnet,
+        address: account.address,
+      });
+
+      const transactionValueWei = toWei(amount);
+
+      if (balance.value < transactionValueWei) {
+        toast({
+          variant: "destructive",
+          title: "Insufficient Funds",
+          description: (
+            <div>
+              You do not have enough BDAG to complete this transaction.
+              <a 
+                href="https://primordial.bdagscan.com/faucet" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="font-bold underline underline-offset-2 ml-1"
+              >
+                Get test funds from the faucet.
+              </a>
+            </div>
+          ),
+        });
+        return;
+      }
+
       const transaction = prepareTransaction({
         to: toAddress,
-        value: toWei(amount),
+        value: transactionValueWei,
         chain: bdagTestnet,
         client: client,
       });
