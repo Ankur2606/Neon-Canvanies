@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -24,7 +25,7 @@ export function JobBoard() {
       id: 1,
       title: "Logo Design for Tech Startup",
       description: "Need a modern, minimalist logo for a SaaS company",
-      budget: "50 - 100 BDAG",
+      budget: "20 BDAG",
       skills: ["Logo Design", "Branding", "Adobe Illustrator"],
       postedBy: "TechCorp Inc.",
       postedDate: "2 days ago",
